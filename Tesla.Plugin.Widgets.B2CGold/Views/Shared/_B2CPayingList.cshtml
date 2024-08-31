@@ -1,0 +1,135 @@
+﻿@model ProductDetailsModel
+@inject B2CGoldSettings b2CGoldSettings
+
+<div class="accordion-product-gold">
+    <div class="controller controller-accordion">
+        <div class="icon-header">
+            <div class="icon">
+                <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/dollar-circle.svg" alt="">
+            </div>
+            <span class="header">جدول محاسبه قیمت</span>
+        </div>
+        <div class="controller-arrow">
+            <i class="fal fa-angle-down"></i>
+        </div>
+    </div>
+    <div class="body body-accordion">
+        @if (b2CGoldSettings.GoldPriceUsedIsActive)
+        {
+            <div class="accordion-item">
+                <div class="controller-accordion-item">
+                    <span class="text">قیمت طلای بکار رفته:</span>
+                    <span class="value">
+                        <span class="main-value Product-Gold-Price"></span>
+                        <span class="text-value">تومان</span>
+                        <span class="controller-item-arrow"><i class="fal fa-angle-down"></i></span>
+                    </span>
+                </div>
+
+                <div class="body-accordion-item weight-gold">
+
+
+                    <div class="item pl-30 pr-8 pt-0">
+                        <span class="text">
+                            <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/weight.svg" alt="">
+                            <span class="main-text">وزن به گرم:</span>
+                        </span>
+                        <span class="value">
+                            <span class="main-value total-weight"></span>
+                            <span class="text-value text-value-weight">گرم</span>
+                        </span>
+                    </div>
+
+
+                    <div class="item pl-30 pr-8 pt-0">
+                        <span class="text">
+                            <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/weight.svg" alt="">
+                            <span class="main-text">قیمت لحظه ای طلای ۱۸ عیار به گرم:</span>
+                        </span>
+                        <span class="value">
+                            <span class="main-value current-price-gold-online"></span>
+                            <span class="text-value">تومان</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="accordion-item">
+            <div class="body-accordion-item-show">
+                @if (b2CGoldSettings.ManufacturerProfitIsActive)
+                {
+                    <div class="item">
+                        <span class="text">
+                            <span class="main-text"> اجرت ساخت: (<span class="manu-facturer-profit-precentage">0</span>%)</span>
+                        </span>
+                        <span class="value">
+                            <span class="main-value manu-facturer-profit">0</span>
+                            <span class="text-value">تومان</span>
+                            <span class="icon-value"><i class="fal fa-exclamation-circle"></i></span>
+                        </span>
+                    </div>
+                }
+
+                @if (b2CGoldSettings.VendorProfitIsActive)
+                {
+                    <div class="item">
+                        <span class="text">
+                            <span class="main-text">سود فروشنده: (<span class="profit-precentage"></span>%)</span>
+                        </span>
+                        <span class="value">
+                            <span class="main-value profit">0</span>
+                            <span class="text-value">تومان</span>
+                            <span class="icon-value"><i class="fal fa-exclamation-circle"></i></span>
+                        </span>
+                    </div>
+                }
+
+                @if (b2CGoldSettings.TaxIsActive)
+                {
+                    <div class="item">
+                        <span class="text">
+                            <span class="main-text">مالیات سودواجرت: (<span class="commissions-tax-precentage"></span>%)</span>
+                        </span>
+                        <span class="value">
+                            <span class="main-value commissions-tax">0</span>
+                            <span class="text-value">تومان</span>
+                            <span class="icon-value"><i class="fal fa-exclamation-circle"></i></span>
+                        </span>
+                    </div>
+                }
+
+                @if (b2CGoldSettings.BelongingPriceIsActive)
+                {
+                    <div class="item pl-30">
+                        <span class="text">
+                            <span class="main-text">متعلقات:</span>
+                        </span>
+                        <span class="value">
+                            <span class="main-value belonging-price">0</span>
+                            <span class="text-value">تومان</span>
+                        </span>
+                    </div>
+                }
+
+                <div class="line-border"></div>
+
+                @if (b2CGoldSettings.TotalPriceIsActive)
+                {
+                    <div class="content end-price">
+                        <span class="text">
+                            <span class="main-text">قیمت نهایی:</span>
+                        </span>
+                        <span class="value">
+                            <span class="main-value total-price">0</span>
+                            <span class="text-value">تومان</span>
+                        </span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

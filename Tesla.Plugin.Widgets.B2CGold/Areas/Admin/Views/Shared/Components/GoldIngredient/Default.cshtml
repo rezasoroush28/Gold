@@ -1,0 +1,306 @@
+﻿@model GoldIngredientAdminModel
+
+@{
+    Layout = null;
+    const string hideB2CProductBelongingBlockAttributeName = "B2CGold.hideB2CProductBelongingBlock";
+    var hideB2CProductBelongingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideB2CProductBelongingBlockAttributeName);
+}
+
+<nop-antiforgery-token />
+<nop-panel asp-name="b2c-gold-info" asp-icon="fa fa-info"
+           asp-title="اجزاء محصول"
+           asp-hide-block-attribute-name="@hideB2CProductBelongingBlockAttributeName"
+           asp-hide="@hideB2CProductBelongingBlock" asp-advanced="false">
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-body">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div id="Gold-Product-Ingredients-grid"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IngredientName" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="IngredientName" asp-required="true" />
+                                <span asp-validation-for="IngredientName"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IngredientHeight" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="IngredientHeight" asp-required="true" />
+                                <span asp-validation-for="IngredientHeight"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IngredientWidth" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="IngredientWidth" asp-required="true" />
+                                <span asp-validation-for="IngredientWidth"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IngredientLength" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="IngredientLength" asp-required="true" />
+                                <span asp-validation-for="IngredientLength"></span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AvailableMeasurments" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-select asp-for="@Model.MeasureWeightId" asp-required="true" asp-items="@Model.AvailableMeasurments" />
+                                <span asp-validation-for="AvailableMeasurments"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IngredientWeight" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="IngredientWeight" asp-required="true" />
+                                <span asp-validation-for="IngredientWeight"></span>
+                            </div>
+                        </div>
+                        <div class="form-group mt-4">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-9">
+                                <button type="button" id="addIngredientBtn" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nop-panel>
+
+<script>
+    $(document).ready(function () {
+        var dataPrameters = { productId: @Model.ProductId};
+        dataPrameters = addAntiForgeryToken(dataPrameters);
+        $("#Gold-Product-Ingredients-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "/Admin/GoldIngredient/List/" + @Model.ProductId,
+                        type: "POST",
+                        dataType: "json",
+                        data: dataPrameters
+                    },
+                    update: {
+                        url: "/Admin/GoldIngredient/UpdateProductIngredient/",
+                        type: "POST",
+                        dataType: "json",
+                        data: function (data) {
+                            return JSON.stringify({ model: addAntiForgeryToken(data) });
+                        }
+                    }
+
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { editable: false, type: "number" },
+                            IngredientName: { editable: false, type: "string" },
+                            IngredientWeight: { editable: true, type: "number" },
+                            measureWeightName: { editable: false, type: "string" },
+
+                        }
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            scrollable: false,
+            editable: "inline", // Enable inline editing
+            columns: [
+                {
+                    field: "IngredientName",
+                    title: "@T("Admin.Product.GoldIngredient.Name")",
+                    width: 50,
+                },
+                {
+                    field: "IngredientWidth",
+                    title: "@T("Admin.Product.GoldIngredient.Width")",
+                    width: 50,
+                    format: "{0:n0}", // Formatting for number display
+                    editor: function (container, options) {
+                        $('<input required data-bind="value:' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                min: 0
+                            });
+                    }
+                },
+                {
+                    field: "IngredientLength",
+                    title: "@T("Admin.Product.GoldIngredient.Length")",
+                    width: 50,
+                    format: "{0:n2}", // Formatting for decimal numbers
+                    editor: function (container, options) {
+                        $('<input required data-bind="value:' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                min: 0,
+                                decimals: 2,
+                                step: 0.01
+                            });
+                    }
+                },
+                {
+                    field: "IngredientWeight",
+                    title: "@T("Admin.Product.GoldIngredient.Weight")",
+                    width: 40,
+                    template: "#= IngredientWeight # (#= measureWeightName #)",
+                    format: "{0:n2}",
+                    editor: function (container, options) {
+                        $('<input required data-bind="value:' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                min: 0,
+                                decimals: 2,
+                                step: 0.01
+                            });
+                    }
+                },
+                {
+                    field: "IngredientHeight",
+                    title: "@T("Admin.Product.GoldIngredient.Height")",
+                    width: 50,
+                    format: "{0:n2}", // Formatting for decimal numbers
+                    editor: function (container, options) {
+                        $('<input required data-bind="value:' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                min: 0,
+                                decimals: 2,
+                                step: 0.01
+                            });
+                    }
+                },
+                {
+                    field: "Specification",
+                    title: "جزئیات",
+                    template: kendo.template($("#spec-popup-template-ingredient").html()),
+                    width: 50,
+                    filterable: false,
+                    sortable: false,
+                    editable: false
+
+                },
+                {
+                    field: "delete",
+                    title: "حذف",
+                    template: kendo.template($("#delete-template-ingredient").html()),
+                    width: 50,
+                    filterable: false,
+                    sortable: false,
+                    editable: false
+
+                },
+                {
+                    command: ["edit"], // Add edit and delete buttons
+                    title: "ویرایش",
+                    width: 160
+                }
+            ]
+        });
+    });
+
+    $(document).ready(function () {
+        $("#addIngredientBtn").click(function () {
+            var data = {
+                IngredientName: $("#IngredientName").val(),
+                MeasureWeightId: parseFloat($("#MeasureWeightId").val()),
+                IngredientWidth: parseFloat($("#IngredientWidth").val()),
+                IngredientLength: parseFloat($("#IngredientLength").val()),
+                IngredientHeight: parseFloat($("#IngredientHeight").val()),
+                IngredientWeight: parseFloat($("#IngredientWeight").val())
+            };
+            var dataPrameters = addAntiForgeryToken(data);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddProductIngredient", "GoldIngredient", new { productId = Model.ProductId })",
+                data: dataPrameters,
+                success: function (response) {
+                    // $("#MeasureWeightId").val("");
+                    $("#IngredientWeight").val("");
+                    $("#IngredientName").val("");
+                    $("#IngredientWidth").val("");
+                    $("#IngredientHeight").val("");
+                    $("#IngredientLength").val("");
+                    window.location.reload(`/Admin/GoldIngredient/List/${@Model.ProductId}`);
+                },
+                error: function () {
+
+                }
+            });
+        });
+    });
+
+    $("#Gold-Product-Ingredients-grid").on("click", ".btn-delete-ProductIngredient", function (e) {
+        var id = parseInt($(this).attr("data-id"));
+        var dataPrametersDelete = {
+            id: parseInt($(this).attr("data-id"))
+        };
+        dataPrametersDelete = addAntiForgeryToken(dataPrametersDelete)
+        $.ajax({
+            type: "POST",
+            url: `/Admin/GoldIngredient/DeleteProductIngredient/${id}`,
+            data: dataPrametersDelete,
+            success: function (response) {
+                window.location.reload(`/Admin/GoldIngredient/List/${@Model.ProductId}`);
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to delete product belonging mapping: " + error);
+            }
+        });
+    });
+
+    $("#Gold-Product-Ingredients-grid").on("click", ".btn-open-IngredientSpecification-popup", function (e) {
+        var id = parseInt($(this).attr("data-id"));
+        javascript: OpenWindow(`/Admin/GoldIngredient/OpenSpecificationPopupByIngredientId/${id}`, 800, 700, true);
+    });
+</script>
+
+<script id="delete-template-ingredient" type="text/x-kendo-template">
+     <a class="k-button btn-delete-ProductIngredient" data-id="#: Id#">
+          <span class="k-icon k-delete"></span> @T("Admin.Common.Delete")
+    </a>
+</script>
+
+<script id="spec-popup-template-ingredient" type="text/x-kendo-template">
+     <button type="button" class="k-button btn-open-IngredientSpecification-popup" data-id="#: Id#">
+          <span class="k-icon k-delete"></span> جزئیات
+    </button>
+</script>

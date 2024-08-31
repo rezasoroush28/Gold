@@ -1,0 +1,9 @@
+﻿@model GoldProposalValueModel
+
+<div class="content">
+    <div class="form-horizontal">
+        <nop-panels id="category-panels">
+            @await Html.PartialAsync(AdminViewPathKeys.B2CGoldGoldProposalValueInfoCreateUpdateViewPath, Model)
+        </nop-panels>
+    </div>
+</div>

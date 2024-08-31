@@ -1,0 +1,418 @@
+﻿@model B2CGoldSettingsModel
+@{
+    Layout = "_ConfigurePlugin";
+    Html.SetActiveMenuItemSystemName("Widgets.B2CGold.B2CGoldSetting");
+}
+
+<style>
+    h4 {
+        font-family: 'Iran-Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .badge-setting {
+        width: max-content;
+        padding: 8px 16px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        display: block;
+        border-radius: 8px;
+    }
+
+    .active-api {
+        background: #F5FFFC;
+        color: #00BA88;
+    }
+
+    .inActive-api {
+        color: #FF5757;
+        background: #FFF5F6;
+    }
+
+    .date-price {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        display: block;
+    }
+
+    .main-price {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 8px 0;
+        display: block;
+    }
+
+    .left-text {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 7px;
+        margin-bottom: 0;
+        text-align: left;
+        font-weight: bold;
+        line-height: 1.42857143;
+        color: #333;
+    }
+
+    .save-btn{
+        margin-top: 16px;
+    }
+</style>
+
+<div class="content">
+    <div class="form-horizontal">
+        <form asp-controller="B2CGold" asp-action="Configure" method="post">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Plugins.Widgets.B2cgold.Configuration")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <h4>فعال بودن ماژول طلا</h4>
+                            </div>
+                            <div class="col-md-3">
+                                <nop-label asp-for="Enabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Enabled" />
+                                <span asp-validation-for="Enabled"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr />
+                            <h4>پیش فروش</h4>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SellerProfitPercentage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SellerProfitPercentage" />
+                                <span asp-validation-for="SellerProfitPercentage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="GoldPreOrderPercentage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="GoldPreOrderPercentage" />
+                                <span asp-validation-for="GoldPreOrderPercentage"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr />
+                            <h4> قیمت دستی طلا</h4>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="UseDefaultGoldCurrentPrice" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="UseDefaultGoldCurrentPrice" />
+                                <span asp-validation-for="UseDefaultGoldCurrentPrice"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="GoldCurrentPriceInput" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="GoldCurrentPriceInput" />
+                                <span asp-validation-for="GoldCurrentPriceInput"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <hr />
+                            <h4> ای پی آی قیمت لحظه ای طلا</h4>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <span class="left-text">@T("Plugins.Widgets.B2cgold.Configuration.ApiPriceGoldActive")</span>
+                            </div>
+                            <div class="col-md-9">
+                                @if (Model.ApiPriceGoldActive)
+                                {
+                                    <span class="active-api badge-setting">فعال</span>
+                                }
+                                else
+                                {
+                                    <span class="inActive-api badge-setting">غیرفعال</span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ApiGoldPriceUrl" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ApiGoldPriceUrl" />
+                                <span asp-validation-for="ApiGoldPriceUrl"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <span class="left-text">@T("Plugins.Widgets.B2cgold.Configuration.LastUpdatePriceGold")</span>
+                            </div>
+                            <div class="col-md-9">
+                                <span class="date-price">@Model.LastUpdatePriceGold</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceGoldByTheMinute" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PriceGoldByTheMinute" />
+                                <span asp-validation-for="PriceGoldByTheMinute"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <label class="left-text">@T("Plugins.Widgets.B2cgold.Configuration.UpdateCurrentGold")</label>
+                            </div>
+                            <div class="col-md-9">
+                                <button class="updateCurrentGold btn btn-primary">بروزرسانی</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <span class="left-text">@T("Plugins.Widgets.B2cgold.Configuration.GoldCurrentPriceOnline")</span>
+                            </div>
+                            <div class="col-md-9">
+                                <span class="main-price">@Model.GoldCurrentPriceOnline.ToString("N0")</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceGrabberConnectionString" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PriceGrabberConnectionString" />
+                                <span asp-validation-for="PriceGrabberConnectionString"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr />
+
+                            <h4>مالیات و اجرت</h4>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="GoldTaxRate" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="GoldTaxRate" />
+                                <span asp-validation-for="GoldTaxRate"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr />
+
+                            <h4>نمایش موارد در جدول محاسبات قیمت در صفحه جزئیات محصول</h4>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="GoldPriceUsedIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="GoldPriceUsedIsActive" />
+                                <span asp-validation-for="GoldPriceUsedIsActive"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="GoldCurrentPriceIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="GoldCurrentPriceIsActive" />
+                                <span asp-validation-for="GoldCurrentPriceIsActive"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TotalWeightIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TotalWeightIsActive" />
+                                <span asp-validation-for="TotalWeightIsActive"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ProductGoldPriceIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ProductGoldPriceIsActive" />
+                                <span asp-validation-for="ProductGoldPriceIsActive"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BelongingPriceIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="BelongingPriceIsActive" />
+                                <span asp-validation-for="BelongingPriceIsActive"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TaxIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TaxIsActive" />
+                                <span asp-validation-for="TaxIsActive"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TotalPriceIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="TotalPriceIsActive" />
+                                <span asp-validation-for="TotalPriceIsActive"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ManufacturerProfitIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ManufacturerProfitIsActive" />
+                                <span asp-validation-for="ManufacturerProfitIsActive"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MiscPriceIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MiscPriceIsActive" />
+                                <span asp-validation-for="MiscPriceIsActive"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PreOrderPriceIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PreOrderPriceIsActive" />
+                                <span asp-validation-for="PreOrderPriceIsActive"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="VendorProfitIsActive" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="VendorProfitIsActive" />
+                                <span asp-validation-for="VendorProfitIsActive"></span>
+                            </div>
+                        </div>
+
+                        
+
+                        <div class="col-md-12">
+                            <hr />
+                            <h4>محاسبات</h4>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AvailableCalculationMethods" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-select asp-for="@Model.PriceCalculationMethodName" asp-required="true" asp-items="@Model.AvailableCalculationMethods" />
+                                <span asp-validation-for="AvailableCalculationMethods"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <hr />
+                            <h4>بخش فاکتور طلا</h4>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IfShowGoldPrePurchaceFactor" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IfShowGoldPrePurchaceFactor" />
+                                <span asp-validation-for="IfShowGoldPrePurchaceFactor"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <hr />
+                            <h4> صفحه پرداخت سفارش</h4>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="OrderValidateTimeInSeconds" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="OrderValidateTimeInSeconds" />
+                                <span asp-validation-for="OrderValidateTimeInSeconds"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <hr />
+                            <h4>چت آنلاین در قسمت راه های ارتباطی</h4>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IsActiveOnlineChat" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsActiveOnlineChat" />
+                                <span asp-validation-for="IsActiveOnlineChat"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group save-btn">
+                            <div class="col-md-9 col-md-offset-3">
+                                <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#GoldCurrentPriceOnline').prop('readonly', true);
+        $(document).ready(function () {
+            $('.updateCurrentGold').click(function () {
+                window.location.reload();
+                // $.ajax({
+                //     url: '/Admin/Common/ClearCache',
+                //     type: 'GET',
+                //     success: function (response) {
+                //         console.log('Cache cleared successfully.');
+                //     },
+                //     error: function (xhr, status, error) {
+                //         console.log('An error occurred while clearing the cache: ' + error);
+                //     }
+                // });
+            });
+        });
+    });
+</script>

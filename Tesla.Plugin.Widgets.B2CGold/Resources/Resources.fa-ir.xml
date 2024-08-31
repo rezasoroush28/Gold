@@ -1,0 +1,546 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="Persian">
+	<LocaleResource Name="Plugins.Widgets.Gold.Configuration">
+		<Value>تنظیمات ماژول</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Configuration">
+		<Value>تنظیمات طلا</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Root">
+		<Value>طلا</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldBelonging">
+		<Value>متعلقات</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue">
+		<Value>ارزش های پیشنهادی</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2CGold.ProductGoldInfo.ManufacturerCommissionPercentage">
+		<Value>اجرت ساخت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.ProductGoldInfo.VendorCommissionPercentage">
+		<Value>سود فروشنده</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.ProductGoldInfo.BonakdarCommissionPercentage">
+		<Value>کمیسیون بنکدار</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldPriceInfo.Percentage">
+		<Value>درصد</Value>
+	</LocaleResource> 
+	
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldPriceInfo.Title">
+		<Value>سهم فروش</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.Value">
+		<Value>آدرس راه ارتباطی</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.GoldContactInfoType">
+		<Value>نوع ارتباط</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.AllDaysOfWeek">
+		<Value>‌همه روزه</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.StartDayofWeekName">
+		<Value>از روز</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.EndDayofWeekName">
+		<Value>تا روز</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.FromHour">
+		<Value>‌از ساعت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.ToHour">
+		<Value>‌تا ساعت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.Enabled">
+		<Value>فعال</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Enums.Tesla.Plugin.Widgets.B2CGold.Domain.GoldContactInfoType.Telephone">
+		<Value>تلفن ثابت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Enums.Tesla.Plugin.Widgets.B2CGold.Domain.GoldContactInfoType.Moblie">
+		<Value>شماره همراه</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Enums.Tesla.Plugin.Widgets.B2CGold.Domain.GoldContactInfoType.Telegram">
+		<Value>تلگرام</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Enums.Tesla.Plugin.Widgets.B2CGold.Domain.GoldContactInfoType.WhatsApp">
+		<Value>واتساپ</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Enums.System.Saturday">
+		<Value>شنبه</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Enums.System.Sunday">
+		<Value>یکشنبه</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Enums.System.Monday">
+		<Value>دوشنبه</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Enums.System.Tuesday">
+		<Value>سه‌شنبه</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Enums.System.Wednesday">
+		<Value>چهارشنبه</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Enums.System.Thursday">
+		<Value>پنجشنبه</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Enums.System.Friday">
+		<Value>جمعه</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.ActivityLog.AddNewGoldContactInfo">
+		<Value>اطلاعات تماس اضافه شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugin.Widgets.B2CGold.GoldContactInfo.Added">
+		<Value>اطلاعات تماس اضافه شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.ActivityLog.EditGoldContactInfo">
+		<Value>اطلاعات تماس ویرایش شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.Updated">
+		<Value>اطلاعات تماس ویرایش شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.ActivityLog.DeleteGoldContactInfo">
+		<Value>اطلاعات تماس حذف شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.Deleted">
+		<Value>اطلاعات تماس حذف شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo">
+		<Value>اطلاعات تماس</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.Create">
+		<Value>افزودن اطلاعات تماس جدید</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.Edit">
+		<Value>ویرایش جزئیات اطلاعات تماس</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.BackToList">
+		<Value>بازگشت به لیست اطلاعات تماس</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.ValueTitle">
+		<Value>عنوان</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.ValueDescription">
+		<Value>توضیحات</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.IconPath">
+		<Value>آیکون</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue">
+		<Value>ارزش های پیشنهادی</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.ActivityLog.AddNewGoldProposalValue">
+		<Value>ارزش های پیشنهادی اضافه شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugin.Widgets.B2CGold.GoldProposalValue.Added">
+		<Value>ارزش های پیشنهادی اضافه شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.ActivityLog.EditGoldProposalValue">
+		<Value>ارزش های پیشنهادی ویرایش شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.Updated">
+		<Value>ارزش های پیشنهادی ویرایش شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.ActivityLog.DeleteGoldProposalValue">
+		<Value>ارزش های پیشنهادی حذف شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.Deleted">
+		<Value>ارزش های پیشنهادی حذف شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.Create">
+		<Value>افزودن ارزش های پیشنهادی جدید</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.Edit">
+		<Value>ویرایش جزئیات ارزش های پیشنهادی</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.BackToList">
+		<Value>بازگشت به لیست ارزش های پیشنهادی</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.ValueTitle.Required.Error">
+		<Value>عنوان ضروری است</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.ValueDescription.Required.Error">
+		<Value>توضیحات ضروری است</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.UploadedIcon.Required.Error">
+		<Value>شما فایلی بارگذاری نکردید یا نوع فایل بارگذاری شده قابل قبول نیست</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.Duplicate.Error">
+		<Value>ارزش پیشنهادی ای با این عنوان موجود است</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldProposalValue.ValueTitle.DuplicateError">
+		<Value>عنوان وارد شده برای ارزش پیشنهادی تکراری است</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.Telephone.Title">
+		<Value>ساعات پاسخگویی شنبه تا چهارشنبه از ساعت ۸ تا ۱۹</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.Moblie.Title">
+		<Value>ساعات پاسخگویی شنبه تا چهارشنبه از ساعت ۸ تا ۱۹</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.GoldContactInfo.SocialMedia.Title">
+		<Value>ساعات پاسخگویی شنبه تا چهارشنبه از ساعت ۸ تا ۱۹</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.GoldbelongingType">
+		<Value>نوع متعلقات</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Configuration.B2CGold.Fields.Name">
+		<Value>نام متعلقات</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Configuration.B2CGold.Fields.AvailableTypes">
+		<Value>تایپ متعلقات </Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Configuration.B2CGold.Fields.AvailableMeasurments">
+		<Value>واحد شمارش</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="admin.configuration.productgoldbelonging.name">
+		<Value>متعلقات محصول</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="admin.configuration.productgoldbelonging.weight">
+		<Value>وزن</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.product.B2CGold.Belonging.Name">
+		<Value>نام متعلقه</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.product.B2CGold.Belonging.Count">
+		<Value>تعداد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.product.B2CGold.Belonging.Weight">
+		<Value>وزن</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.product.B2CGold.Belonging.Type">
+		<Value>نوع متعلقه</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.B2CGold.BelongingPaying.Fields.Value">
+		<Value>مقدار متعلقات محصول</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.B2CGold.BelongingPaying.Fields.GoldBelongingCalculationTypeId">
+		<Value>روش محاسبه متعلقات</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.GoldIngredient.Name">
+		<Value>نام</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.GoldIngredient.Count">
+		<Value>تعداد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.GoldIngredient.Weight">
+		<Value>وزن</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.B2CGold.Fields.IngredientName">
+		<Value>نام</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.B2CGold.Fields.IngredientHeight">
+		<Value>ارتفاع</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.B2CGold.Fields.IngredientWidth">
+		<Value>عرض</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.B2CGold.Fields.IngredientLength">
+		<Value>طول</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.B2CGold.Fields.AvailableMeasurments">
+		<Value>واحد وزن</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.B2CGold.Fields.IngredientWeight">
+		<Value>وزن</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Product.ProductGoldSpecification.SpecKey">
+		<Value>نام</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Admin.Product.ProductGoldSpecification.Value">
+		<Value>مقدار</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.SellerProfitPercentage">
+		<Value>درصد سود از فروش</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.GoldPrepurchasePercentage">
+		<Value>درصد پیش فروش بر اساس قیمت کل</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.GoldCurrentPriceInput">
+		<Value>قیمت دستی واحد وزن طلا </Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.UseDefaultGoldCurrentPrice">
+		<Value>استفاده از قیمت دستی طلا </Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.GoldPreOrderPercentage">
+		<Value>درصد پیش فروش بر اساس قیمت کل</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.IsActiveBelongings">
+		<Value>فعال بودن قیمت متعلقات در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.GoldCurrentPriceIsActive">
+		<Value>فعال بودن قیمت طلا در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.TotalWeightIsActive">
+		<Value>فعال بودن وزن کالا در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.ProductGoldPriceIsActive">
+		<Value>فعال بودن قیمت تمام شده طلا در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.BelongingPriceIsActive">
+		<Value>فعال بودن قیمت متعلقات در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.TaxIsActive">
+		<Value>فعال بودن مالیات در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.GoldTaxRate">
+		<Value>مالیات سود و اجرت</Value>
+	</LocaleResource>
+	
+	
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.TotalPriceIsActive">
+		<Value>فعال بودن قیمت تمام شده در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.ManufacturerProfitIsActive">
+		<Value>فعال بودن سود ساخت در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.MiscPriceIsActive">
+		<Value>فعال بودن هزینه در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.PreOrderPriceIsActive">
+		<Value>فعال بودن هزینه پیش پرداخت در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.VendorProfitIsActive">
+		<Value>فعال بودن سود فروشنده در لیست محاسبات قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration">
+		<Value>تنظیمات طلا</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="admin.product.goldingredient.width">
+		<Value>عرض</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="admin.product.goldingredient.length">
+		<Value>طول</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="admin.product.goldingredient.height">
+		<Value>ارتفاع</Value>
+	</LocaleResource>
+
+	
+	<LocaleResource Name="Admin.B2CGold.GoldBelongingType.Fields.Name">
+		<Value>نام متعلقات</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="admin.configuration.b2cgoldbelonging.addnew">
+		<Value>اضافه کردن متعلقات جدید</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="admin.configuration.b2cgoldbelonging.updated">
+		<Value>لیست متعلقات بروزرسانی شد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.PriceGoldByTheMinute">
+		<Value>زمان ذخیره قیمت طلا در حافظه سیستم (به دقیقه)</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.PriceGrabberConnectionString">
+		<Value>رشته اتصال (جدول قیمت لحظه ای طلا)</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2cgold.B2CGoldSetting">
+		<Value>تنظیمات طلا</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.AvailableCalculationMethods">
+		<Value>فرمول محاسبه قیمت طلا</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Widgets.B2CGold.Admin.MangeBelonging.Title">
+		<Value>متعلقات</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Widgets.B2CGold.Admin.MangeBelonginType.Title">
+		<Value>نوع متعلقات</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Configuration.B2CGoldBelongin.Name">
+		<Value>نام</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Admin.Configuration.B2CGoldbelonging.Backtolist">
+		<Value>بازگشت به لیست</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Configuration.ProductGoldBelonging.Count">
+		<Value>تعداد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.B2CGold.BelongingPaying.GoldFinalPriceGoldFinalPrice">
+		<Value>بر اساس قیمت نهایی</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.B2CGold.BelongingPaying.BaseProductGoldPrice">
+		<Value>قیمت پایه محصول</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.B2CGold.BelongingPaying.SolidPrice">
+		<Value>قیمت ثابت</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Admin.Configuration.B2CGoldBelongingType">
+		<Value>نوع متعلقات</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.Enabled">
+		<Value>ماژول فعال باشد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.GoldCurrentPriceOnline">
+		<Value>قیمت لحظه ای طلا</Value>
+	</LocaleResource>
+	
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Update.Price">
+		<Value>بروزرسانی قیمت</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Configuration.ApiPriceGoldActive">
+		<Value>ای پی آی قیمت طلا</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Configuration.ApiGoldPriceUrl">
+		<Value>آدرس ای پی آی طلا</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Configuration.UpdateCurrentGold">
+		<Value>بروزرسانی</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2CGold.Configuration.LastUpdatePriceGold">
+		<Value>آخرین قیمت دریافت شده در</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.OrderValidateTimeInSeconds">
+		<Value>(به ثانیه) محدوده مجاز پرداخت کالا</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Configure.B2CGold.StandardGoldpriceCalculator">
+		<Value>فرمول استاندارد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Admin.Configure.B2CGold.SirvangoldPriceCalculator">
+		<Value>فرمول سیروان گلد</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.IfShowGoldPrePurchaceFactor">
+		<Value>نمایش پیش فاکتور </Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.IsShowGoldFactorDetails">
+		<Value>نمایش جزییات طلا در فاکتور و پیش فاکتور </Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.GoldPriceIsActive">
+		<Value>نمایش قیمت طلا آنلاین و جمع وزن</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.GoldPriceUsedIsActive">
+		<Value>نمایش بخش قیمت طلای به کار رفته (وزن و قیمت آنلاین طلا)</Value>
+	</LocaleResource>
+
+	<LocaleResource Name="Plugins.Widgets.B2cgold.Configuration.IsActiveOnlineChat">
+		<Value>فعال بودن چت آنلاین</Value>
+	</LocaleResource>
+
+</Language>

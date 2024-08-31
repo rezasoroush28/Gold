@@ -1,0 +1,97 @@
+@model GoldContactInfoSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Plugins.Widgets.B2CGold.GoldContactInfo").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Widgets.B2CGold.GoldContactInfo");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Plugins.Widgets.B2CGold.GoldContactInfo")
+    </h1>
+    <div class="pull-right">
+        <a asp-action="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "goldContactInfo-grid",
+                        UrlRead = new DataUrl("List", "GoldContactInfo", null),
+                        Length = Model.PageSize,
+                        LengthMenu = Model.AvailablePageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(GoldContactInfoModel.Value))
+                            {
+                                Title = T("Plugins.Widgets.B2CGold.GoldContactInfo.Value").Text
+                            },
+                            new ColumnProperty(nameof(GoldContactInfoModel.GoldContactInfoTypeName))
+                            {
+                                Title = T("Plugins.Widgets.B2CGold.GoldContactInfo.GoldContactInfoType").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(GoldContactInfoModel.StartDayofWeekName))
+                            {
+                                Title = T("Plugins.Widgets.B2CGold.GoldContactInfo.StartDayofWeekName").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(GoldContactInfoModel.EndDayofWeekName))
+                            {
+                                Title = T("Plugins.Widgets.B2CGold.GoldContactInfo.EndDayofWeekName").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(GoldContactInfoModel.AllDaysOfWeek))
+                            {
+                                Title = T("Plugins.Widgets.B2CGold.GoldContactInfo.AllDaysOfWeek").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(GoldContactInfoModel.FromHour))
+                            {
+                                Title = T("Plugins.Widgets.B2CGold.GoldContactInfo.FromHour").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(GoldContactInfoModel.ToHour))
+                            {
+                                Title = T("Plugins.Widgets.B2CGold.GoldContactInfo.ToHour").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(GoldContactInfoModel.Enabled))
+                            {
+                                Title = T("Plugins.Widgets.B2CGold.GoldContactInfo.Enabled").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                                Render = new RenderBoolean()
+                            },
+                            new ColumnProperty(nameof(GoldContactInfoModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

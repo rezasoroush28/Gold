@@ -1,0 +1,231 @@
+﻿@model ProductGoldBelongingMappingModel
+
+@{
+    Layout = null;
+    const string hideB2CProductBelongingBlockAttributeName = "B2CGold.hideB2CProductBelongingBlock";
+    var hideB2CProductBelongingBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideB2CProductBelongingBlockAttributeName);
+}
+
+<nop-antiforgery-token />
+
+<nop-panel asp-name="b2c-gold-info" asp-icon="fa fa-info"
+           asp-title="متعلقات محصول"
+           asp-hide-block-attribute-name="@hideB2CProductBelongingBlockAttributeName"
+           asp-hide="@hideB2CProductBelongingBlock" asp-advanced="false">
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-body">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div id="Product-Gold-Belongings-grid"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AvailableGoldBelongings" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-select asp-for="@Model.GoldBelongingId" asp-required="true"
+                                            asp-items="@Model.AvailableGoldBelongings" />
+                                <span asp-validation-for="AvailableGoldBelongings"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BelongingCount" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="BelongingCount" asp-required="true" />
+                                <span asp-validation-for="BelongingCount"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BelongingWeight" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="BelongingWeight" asp-required="true" />
+                                <span asp-validation-for="BelongingWeight"></span>
+                            </div>
+                        </div>
+                        <div class="form-group mt-4">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-9">
+                                <button type="button" id="addMappingBtn" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @await Component.InvokeAsync("B2CGoldBelongingPaying", Model.ProductId)
+    </div>
+</nop-panel>
+
+
+
+<script>
+
+    $(document).ready(function () {
+        var dataPrameters = { productId: @Model.ProductId};
+        dataPrameters = addAntiForgeryToken(dataPrameters);
+        $("#Product-Gold-Belongings-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "/Admin/GoldBelonging/ListProductBelongings/" + @Model.ProductId,
+                        type: "POST",
+                        dataType: "json",
+                        data: dataPrameters
+                    },
+                    update: {
+                        url: "/Admin/GoldBelonging/UpdateProductBelonging",
+                        type: "POST",
+                        dataType: "json",
+                        data: function (data) {
+                            return JSON.stringify({ model: addAntiForgeryToken(data) });
+                        }
+                    }
+
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { editable: false, type: "number" },
+                            GoldBelongingName: { editable: false, type: "string" },
+                            BelongingCount: { editable: true, type: "number" },
+                            BelongingWeight: { editable: true, type: "number" },
+
+                        }
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            scrollable: false,
+            editable: "inline", // Enable inline editing
+            columns: [
+                {
+                    field: "GoldBelongingName",
+                    title: "@T("Admin.Configuration.ProductGoldBelonging.Name")",
+                    width: 90,
+                },
+                {
+                    field: "BelongingCount",
+                    title: "@T("Admin.Configuration.ProductGoldBelonging.Count")",
+                    width: 50,
+                    format: "{0:n0}", // Formatting for number display
+                    editor: function (container, options) {
+                        $('<input required data-bind="value:' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                min: 0
+                            });
+                    }
+                },
+                {
+                    field: "BelongingWeight",
+                    title: "@T("Admin.Configuration.ProductGoldBelonging.Weight")",
+                    width: 50,
+                    format: "{0:n2}", // Formatting for decimal numbers
+                    editor: function (container, options) {
+                        $('<input required data-bind="value:' + options.field + '"/>')
+                            .appendTo(container)
+                            .kendoNumericTextBox({
+                                min: 0,
+                                decimals: 2,
+                                step: 0.01
+                            });
+                    }
+                },
+                {
+                    field: "delete",
+                    title: "حذف",
+                    template: kendo.template($("#delete-template").html()),
+                    width: 50,
+                    filterable: false,
+                    sortable: false,
+                    edirable: false
+
+                },
+                {
+                    command: ["edit"], // Add edit and delete buttons
+                    title: "ویرایش",
+                    width: 160
+                }
+            ]
+        });
+    });
+
+    $(document).ready(function () {
+        $("#addMappingBtn").click(function () {
+            var data = {
+                goldBelongingId: parseInt($("#GoldBelongingId").val()),
+                belongingCount: parseInt($("#BelongingCount").val()),
+                belongingWeight: parseFloat($("#BelongingWeight").val())
+            };
+            var dataPrameters = addAntiForgeryToken(data);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddProductGoldBelongingMapping", "GoldBelonging", new { productId = Model.ProductId })",
+                data: dataPrameters,
+                success: function (response) {
+                    $("#GoldBelongingId").val();
+                    $("#BelongingCount").val("");
+                    $("#BelongingWeight").val("");
+                    window.location.reload(`/Admin/GoldBelonging/ListProductBelongings/${@Model.ProductId}`);
+                },
+                error: function () {
+
+                }
+            });
+        });
+    });
+
+    $("#Product-Gold-Belongings-grid").on("click", ".btn-delete-belongingmap", function (e) {
+        var id = parseInt($(this).attr("data-id"));
+        console.log(e);
+        console.log(id);
+        var dataPrametersDelete = {
+            id: parseInt($(this).attr("data-id"))
+        };
+        dataPrametersDelete = addAntiForgeryToken(dataPrametersDelete)
+        $.ajax({
+            type: "POST",
+            url: `/Admin/GoldBelonging/DeleteProductGoldBelongingMapping/${id}`,
+            data: dataPrametersDelete,
+            success: function (response) {
+                var productId = @Model.ProductId;
+                window.location.reload(`/Admin/GoldBelonging/ListProductBelongings/${productId}`);
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to delete product belonging mapping: " + error);
+            }
+        });
+    });
+</script>
+
+<script id="delete-template" type="text/x-kendo-template">
+     <a  class="k-button btn-delete-belongingmap" data-id="#: Id#">
+          <span class="k-icon k-delete"></span> @T("Admin.Common.Delete")
+    </a>
+</script>

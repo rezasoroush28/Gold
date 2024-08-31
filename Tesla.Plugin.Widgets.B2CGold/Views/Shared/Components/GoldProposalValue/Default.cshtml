@@ -1,0 +1,34 @@
+﻿@model GoldProposalValueViewModel
+
+<div class="products-guarantees">
+    <div class="title">
+        <span class="main-title">ضمانت ها و ارزش های پیشنهادی ما</span>
+        <a href="#" class="link">
+            <span class="text">
+                بیشتر
+            </span>
+            <span class="icon">
+                <i class="fal fa-angle-left"></i>
+            </span>
+        </a>
+    </div>
+
+    @foreach (var goldProposalValue in Model.GoldProposalValues)
+    {
+        <div class="item">
+            <div class="icon">
+                <img src=@goldProposalValue.IconPath alt="">
+            </div>
+            <div class="text">
+                @goldProposalValue.ValueTitle
+            </div>
+        </div>
+    }
+
+    <a class="return-product">
+        <span class="text">مراحل بازگشت کالا</span>
+        <span class="icon">
+            <i class="fal fa-angle-left"></i>
+        </span>
+    </a>
+</div>

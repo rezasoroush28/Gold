@@ -1,0 +1,99 @@
+﻿@model GoldContactInfoViewModel
+@inject B2CGoldSettings b2CGoldSettings
+
+@if (Model.GoldContactInfos.Any())
+{
+    <div class="ways-of-communication">
+        <span class="title title-box">راه های ارتباطی با مشاورین ما </span>
+        <span class="sub-title subTitle-box">
+            جهت ایجاد ارتباط میتوانید روی هرکدام از شماره های زیر کلیک
+            نمایید
+        </span>
+
+        <div class="item">
+            <div class="header">
+                @if (Model.GoldContactInfos.Any(goldContactInfos => goldContactInfos.GoldContactInfoTypeId == 1))
+                {
+                    <div class="header-icon">
+                        <span class="icon"><img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/call.svg" alt=""></span>
+                        <span class="title">تلفن ثابت</span>
+                    </div>
+                    <span class="sub-title">@T("Plugins.Widgets.B2CGold.GoldContactInfo.Telephone.Title")</span>
+                    @foreach (var goldContactInfo in Model.GoldContactInfos)
+                    {
+                        @if (goldContactInfo.GoldContactInfoTypeId == 1)
+                        {
+                            <a href="tel:09125308421" class="phone-number">@goldContactInfo.Value</a>
+                        }
+                    }
+                }
+
+                @if (Model.GoldContactInfos.Any(goldContactInfos => goldContactInfos.GoldContactInfoTypeId == 2))
+                {
+                    <div class="header-icon">
+                        <span class="icon"><img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/mobile.svg" alt=""></span>
+                        <span class="title">شماره همراه</span>
+                    </div>
+                    <span class="sub-title">@T("Plugins.Widgets.B2CGold.GoldContactInfo.Moblie.Title")</span>
+                    @foreach (var goldContactInfo in Model.GoldContactInfos)
+                    {
+                        @if (goldContactInfo.GoldContactInfoTypeId == 2)
+                        {
+                            <a href="tel:09125308421" class="phone-number">@goldContactInfo.Value</a>
+                        }
+                    }
+                }
+
+                @if (Model.GoldContactInfos.Any
+               (goldContactInfos => goldContactInfos.GoldContactInfoTypeId == 3) ||
+               Model.GoldContactInfos.Any(goldContactInfos => goldContactInfos.GoldContactInfoTypeId == 4))
+                {
+                    <div class="header-icon">
+                        <span class="icon"><img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/sms.svg" alt=""></span>
+                        <span class="title">پیام رسان</span>
+                    </div>
+                    <span class="sub-title">@T("Plugins.Widgets.B2CGold.GoldContactInfo.SocialMedia.Title")</span>
+                    @foreach (var goldContactInfo in Model.GoldContactInfos)
+                    {
+                        @if (goldContactInfo.GoldContactInfoTypeId == 3)
+                        {
+                            <a href="https://t.me/@goldContactInfo.Value" class="phone-number">
+                                <span class="logo-social">
+                                    <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/logos_telegram.svg">
+                                </span>
+                                @goldContactInfo.Value
+                            </a>
+                        }
+                    }
+
+                    @foreach (var goldContactInfo in Model.GoldContactInfos)
+                    {
+                        @if (goldContactInfo.GoldContactInfoTypeId == 4)
+                        {
+                            <a href="https://api.whatsapp.com/send?phone=@goldContactInfo.Value" class="phone-number">
+                                <span class="logo-social">
+                                    <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/logos_whatsapp-icon.svg">
+                                </span>
+                                @goldContactInfo.Value
+                            </a>
+                        }
+                    }
+                }
+            </div>
+        </div>
+
+        @if (b2CGoldSettings.IsActiveOnlineChat)
+        {
+            <a href="#" class="online-chat">
+                <div class="right">
+                    <span class="icon">
+                        <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/messages-2.svg" alt="">
+                    </span>
+                    <span class="text">ارتباط مستقیم با ما (چت آنلاین)</span>
+                </div>
+                <i class="fal  fa-angle-left"></i>
+            </a>
+        }
+    </div>
+
+}

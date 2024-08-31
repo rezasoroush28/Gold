@@ -1,0 +1,176 @@
+﻿@model OrderDetailsGoldModel
+
+@{
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/lib/themes/ryan/assets/css/profileOrderDetailsGold.css");
+    Html.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.B2CGold/wwwroot/assets/js/profileOrderDetailsGold.js", $"~/Plugins/Widgets.B2CGold/wwwroot/assets/js/profileOrderDetailsGold.js", excludeFromBundle: true);
+}
+
+<input type="hidden" id="lastCurrent-gold-price" value="@Model.LatestCurrentGoldPrice.ToString("N0")" />
+<input type="hidden" id="OrderId" class="OrderId" value="@Model.OrderId" />
+<nop-antiforgery-token />
+
+<div class="body">
+    <div class="row">
+        <div class="column rightCol orderdetails-gold">
+            <div class="captions">
+                <div class="formula-gold">قیمت  نهایی = ( فی طلا+اجرت+سود+مالیات) * وزن</div>
+                <div class="total-costs">جمع هزینه ها</div>
+            </div>
+            <div class="table-total-costs">
+                <div class="item">
+                    <div class="item-text">
+                        <span> جمع قیمت طلاها</span>
+                    </div>
+                    <div class="item-value">
+                        <span class="main-value">@Model.TotalGoldPrice.ToString("N0")</span>
+                        <span class="text-value">تومان</span>
+                    </div>
+                </div>
+
+                @if (Model.LatestCurrentGoldPrice != 0)
+                {
+                    <div class="item">
+                        <div class="item-text">
+                            <span>  فی طلا هنگام خرید </span>
+                        </div>
+                        <div class="item-value">
+                            <span class="main-value">@Model.LatestCurrentGoldPrice.ToString("N0")</span>
+                            <span class="text-value">تومان</span>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.PreOrderPrices != 0)
+                {
+                    <div class="item">
+                        <div class="item-text">
+                            <span> پیش پرداخت </span>
+                        </div>
+                        <div class="item-value">
+                            <span class="main-value">@Model.PreOrderPrices.ToString("N0")</span>
+                            <span class="text-value">تومان</span>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.TotalSpecialServices != 0)
+                {
+                    <div class="item">
+                        <div class="item-text">
+                            <span>جمع خدمات اختصاصی</span>
+                        </div>
+                        <div class="item-value">
+                            <span class="main-value">@Model.TotalSpecialServices.ToString("N0")</span>
+                            <span class="text-value">تومان</span>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.TotalDiscount != 0)
+                {
+                    <div class="item">
+                        <div class="item-text">
+                            <span>تخفیف</span>
+                        </div>
+                        <div class="item-value">
+                            <span class="main-value">@Model.TotalDiscount.ToString("N0")</span>
+                            <span class="text-value">تومان</span>
+                        </div>
+                    </div>
+                }
+
+                <div class="item">
+                    <div class="item-text">
+                        <span> هزینه حمل و نقل</span>
+                    </div>
+                    <div class="item-value">
+                        @if (Model.ShippingCost == 0)
+                        {
+                            <span class="main-value">رایگان</span>
+                        }
+                        else
+                        {
+                            <span class="main-value">@Model.ShippingCost</span>
+                        }
+
+                        @if (Model.ShippingCost != 0)
+                        {
+                            <span class="text-value">تومان</span>
+                        }
+                    </div>
+                </div>
+
+                @if (Model.InstallmentPurchaseCommission != 0)
+                {
+                    <div class="item">
+                        <div class="item-text">
+                            <span>کمیسیون خرید اقساطی</span>
+                        </div>
+                        <div class="item-value">
+                            <span class="main-value">@Model.InstallmentPurchaseCommission.ToString("N0")</span>
+                            <span class="text-value">تومان</span>
+                        </div>
+                    </div>
+                }
+
+                @if (@Model.TotalOrderPrice != 0)
+                {
+                    <div class="item">
+                        <div class="item-text">
+                            <span> جمع کل</span>
+                        </div>
+                        <div class="item-value">
+                            <span class="main-value">@Model.TotalOrderPrice.ToString("N0")</span>
+                            <span class="text-value">تومان</span>
+                        </div>
+                    </div>
+                }
+
+                <div class="item price-to-character">
+                    <span class="text">جمع کل  به حروف:</span>
+                    <span class="main-value">@Model.TotalOrderPriceInLetter تومان</span>
+                </div>
+
+                @if (Model.TotalWeightCorrection != 0)
+                {
+                    <div class="item">
+                        <div class="item-text">
+                            <span>وزن کل</span>
+                        </div>
+                        <div class="item-value">
+                            <span class="main-value">@Model.TotalWeightCorrection.ToString("N0")</span>
+                            <span class="text-value">گرم</span>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.TotalPriceCorrection != 0)
+                {
+                    <div class="item">
+                        <div class="item-text">
+                            <span>  اصلاحیه قیمت</span>
+                        </div>
+                        <div class="item-value">
+                            <span class="main-value">@Model.TotalPriceCorrection.ToString("N0")</span>
+                            <span class="text-value">تومان</span>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+    @if (!Model.IsPaid)
+    {
+        <div id="goldRecalculateContainer">
+            <div class="timer-calculate">
+                <span>زمان باقیمانده برای تسویه حساب :</span>
+                <span class="km-order-status tag tag--bg-special">00:00</span>
+                <span>دقیقه</span>
+            </div>
+            <button id="recalculateGoldPriceBtn" type="button">@T("Plugins.Widgets.B2CGold.Update.Price")</button>
+        </div>
+
+    }
+
+</div>

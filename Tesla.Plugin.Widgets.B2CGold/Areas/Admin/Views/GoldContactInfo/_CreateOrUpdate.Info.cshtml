@@ -1,0 +1,111 @@
+﻿@model GoldContactInfoModel
+@using System.Text;
+
+<div class="panel-group">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("Plugins.Widgets.B2CGold.GoldContactInfo")
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="GoldContactInfoTypeId" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="GoldContactInfoTypeId" asp-items="Model.AvailableGoldContactInfoTypes" />
+                <span asp-validation-for="GoldContactInfoTypeId"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Value" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Value" />
+                <span asp-validation-for="Value"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="AllDaysOfWeek" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="AllDaysOfWeek" />
+                <span asp-validation-for="AllDaysOfWeek"></span>
+            </div>
+        </div>
+
+        <div class="form-group" id="pnlStartDayofWeek">
+            <div class="col-md-3">
+                <nop-label asp-for="StartDayofWeek" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="StartDayofWeek" asp-items="Model.AvailableDays" />
+                <span asp-validation-for="StartDayofWeek"></span>
+            </div>
+        </div>
+
+        <div class="form-group" id="pnlEndDayofWeek">
+            <div class="col-md-3">
+                <nop-label asp-for="EndDayofWeek" />
+            </div>
+            <div class="col-md-9">
+                <nop-select asp-for="EndDayofWeek" asp-items="Model.AvailableDays" />
+                <span asp-validation-for="EndDayofWeek"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="FromHour" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="FromHour" />
+                <span asp-validation-for="FromHour"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="ToHour" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="ToHour" />
+                <span asp-validation-for="ToHour"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                <nop-label asp-for="Enabled" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Enabled" />
+                <span asp-validation-for="Enabled"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.AllDaysOfWeek)").click(toggleAllDaysOfWeek);
+        toggleAllDaysOfWeek();
+
+    });
+
+    function toggleAllDaysOfWeek() {
+        if ($('#@Html.IdFor(model => model.AllDaysOfWeek)').is(':checked')) {
+            $('#pnlStartDayofWeek').hide();
+            $('#pnlEndDayofWeek').hide();
+        }
+        else {
+            $('#pnlStartDayofWeek').show();
+            $('#pnlEndDayofWeek').show();
+        }
+    }
+
+
+</script>

@@ -1,0 +1,62 @@
+﻿@model ProductGoldBelongingsModel
+
+@if (Model.ProductGoldBelongingsList.Any())
+{
+    <div class="accordion-product-gold">
+        <div class="controller controller-accordion">
+            <div class="icon-header">
+                <div class="icon">
+                    <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/colorfilter.svg" alt="">
+                </div>
+                <span class="header">متعلقات</span>
+            </div>
+            <div class="controller-arrow">
+                <i class="fal fa-angle-down"></i>
+            </div>
+        </div>
+        <div class="body body-accordion">
+            @foreach (var item in Model.ProductGoldBelongingsList)
+            {
+                <span class="title">@item.BelongingName</span>
+
+                <div class="item pl-30">
+                    <span class="text">
+                        <span class="main-text">تعداد :</span>
+                    </span>
+                    <span class="value">
+                        <span class="main-value main-value-light">@item.BelongingCount</span>
+                        <span class="text-value text-value-light">عدد</span>
+                    </span>
+                </div>
+
+                <div class="item pl-30">
+                    <span class="text">
+                        <span class="main-text">وزن :</span>
+                    </span>
+                    <span class="value">
+                        <span class="main-value main-value-light">@item.BelongingWeightFormmater</span>
+                        <span class="text-value text-value-light">@item.BelongingMeasureWeight</span>
+                    </span>
+                </div>
+
+                <div class="item pl-30">
+                    <span class="text">
+                        <span class="main-text">جنس :</span>
+                    </span>
+                    <span class="value">
+                        <span class="text-value text-value-bold">@item.BelongingType</span>
+                    </span>
+                </div>
+            }
+            @* <div class="item pl-30">
+                <span class="text">
+                    <span class="main-text"> نحوه محاسبه ی </span>
+                </span>
+                <span class="value">
+                    <span class="main-value main-value-light">@item.BelongingCount</span>
+                    <span class="text-value text-value-light">عدد</span>
+                </span>
+            </div> *@
+        </div>
+    </div>
+}

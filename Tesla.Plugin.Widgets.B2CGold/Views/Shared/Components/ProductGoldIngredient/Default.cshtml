@@ -1,0 +1,84 @@
+﻿@model ProductGoldIngredientModel
+
+@if (Model.ProductGoldIngredientList.Any())
+{
+    <div class="accordion-product-gold">
+        <div class="controller controller-accordion">
+            <div class="icon-header">
+                <div class="icon">
+                    <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/layer.svg" alt="">
+                </div>
+                <span class="header">جدول اجزای تشکیل دهنده</span>
+            </div>
+            <div class="controller-arrow">
+                <i class="fal fa-angle-down"></i>
+            </div>
+        </div>
+        <div class="body body-accordion">
+            @foreach (var item in Model.ProductGoldIngredientList)
+            {
+                <div class="accordion-item">
+                    <span class="title"> مشخصات @item.IngredientName </span>
+                    <div class="controller-accordion-item">
+                        <span class="text">وزن</span>
+                        <span class="value">
+                            <span class="main-value">@item.IngredientWeightFormmater</span>
+                            <span class="text-value text-value-weight">@item.IngredientMeasureWeightName</span>
+                            <span class="controller-item-arrow"><i class="fal fa-angle-down"></i></span>
+                        </span>
+                    </div>
+                    <div class="body-accordion-item">
+                        <div class="item pl-30 item-dimensions">
+                            <span class="text">
+                                <span class="main-text">ابعاد:</span>
+
+                            </span>
+                            <ul>
+                                <li>
+                                    <span class="text">عرض</span>
+                                    <span class="value">
+                                        <span class="main-value">@item.IngredientWidthFormmater</span>
+                                        <span class="text-value">میلی متر</span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="text">طول</span>
+                                    <span class="value">
+                                        <span class="main-value">@item.IngredientLengthFormmater</span>
+                                        <span class="text-value">میلی متر</span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="text">ضخامت</span>
+                                    <span class="value">
+                                        <span class="main-value">@item.IngredientHeightFormmater</span>
+                                        <span class="text-value">میلی متر</span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        @if (item.SpecificationList.Any())
+                        {
+                            @foreach (var spec in item.SpecificationList)
+                            {
+                                <div class="item pl-30">
+                                    <span class="text">
+                                        <span class="main-text">@spec.SpecKey:</span>
+                                    </span>
+                                    <span class="value">
+                                        <span class="main-value">@spec.Value</span>
+                                    </span>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+
+
+        </div>
+    </div>
+
+
+}

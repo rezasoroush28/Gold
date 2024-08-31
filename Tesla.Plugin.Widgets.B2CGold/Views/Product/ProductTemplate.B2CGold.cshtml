@@ -1,0 +1,2402 @@
+﻿@model ProductDetailsModel
+@inject SeoSettings seoSettings
+@inject IWorkContext workContext
+@inject IWebHelper webHelper
+@using Nop.Core.Domain.Seo
+@using Nop.Core
+@using System.Text.RegularExpressions
+@using Nop.Web.Extensions
+@using Nop;
+@using Nop.Core.Domain.Catalog
+@inject IDownloadService downloadService
+@inject CatalogSettings catalogSettings
+@inject B2CGoldSettings b2CGoldSettings
+@inject CatalogCustomFrameworkSettings catalogCustomFrameworkSettings
+@inject Nop.Core.Domain.Media.MediaSettings mediaSettings
+@using Nop.Services.Media
+
+@{ 
+    int imageSquarePictureSize = mediaSettings.ImageSquarePictureSize;
+    string imageSquarePictureSizePx = $"{imageSquarePictureSize}px";
+}
+
+@{
+    Layout = "_ColumnsOne";
+    bool excludeFromBundleBasicFiles = true;
+
+    //title
+    Html.AddTitleParts(!string.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    if (!string.IsNullOrWhiteSpace(Model.SearchEngineIndexStatus))
+    {
+        Html.AddHeadCustomParts($"<meta name=\"robots\" content=\"{Model.SearchEngineIndexStatus}\">");
+    }
+
+    //page class
+    //page class
+    ViewBag.BodyCssClass = "page-extra page-product";
+    Html.AppendCssFileParts(ResourceLocation.Head, "~/lib/themes/ryan/assets/css/sections/pdpFeature.css");
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/themes/ryan/assets/js/components/product.js", excludeFromBundle: excludeFromBundleBasicFiles, isAsync: false);
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/themes/ryan/assets/js/components/template.js", excludeFromBundle: excludeFromBundleBasicFiles, isAsync: false);
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/themes/ryan/assets/js/libraries/lightslider.min.js", excludeFromBundle: excludeFromBundleBasicFiles, isAsync: false);
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/themes/ryan/assets/js/libraries/jquery.countdown.js", excludeFromBundle: excludeFromBundleBasicFiles, isAsync: false);
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/themes/ryan/assets/js/libraries/jquery.range-min.js", excludeFromBundle: excludeFromBundleBasicFiles, isAsync: false);
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/themes/ryan/assets/js/libraries/jquery.sticky.js", excludeFromBundle: excludeFromBundleBasicFiles, isAsync: false);
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/themes/ryan/assets/js/libraries/jquery.zoom.min.js", excludeFromBundle: excludeFromBundleBasicFiles, isAsync: false);
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/lib/themes/ryan/assets/js/libraries/lightgallery-all.js", excludeFromBundle: excludeFromBundleBasicFiles, isAsync: false);
+
+    var productUrl = Model.ProductFullUrl;
+
+    if (seoSettings.CanonicalUrlsEnabled)
+    {
+        if (!string.IsNullOrEmpty(Model.CanonicalUrl))
+        {
+            productUrl = Model.CanonicalUrl;
+        }
+
+        Html.AddCanonicalUrlParts(productUrl, seoSettings.QueryStringInCanonicalUrlsEnabled);
+    }
+
+    var stockAvailabilityMeta = Model.DisableBuyButton ? "outofstock" : "instock";
+
+    Html.AddHeadCustomParts($"<meta name=\"availability\" content=\"{stockAvailabilityMeta}\">");
+
+    var storeLocation = webHelper.GetStoreLocation();
+    var mainImageUrl = Model.DefaultPictureModel.ImageUrl;
+    var mainImageUrlFull = (Model.PictureModels != null && Model.PictureModels.Any() && Model.PictureModels.Count > 0) ? storeLocation.SafeSubstring(0, storeLocation.Length - 1) + mainImageUrl : string.Empty;
+
+    Html.AddHeadCustomParts($"<link rel=\"image_src\" href=\"{mainImageUrlFull}\" />");
+
+    if (seoSettings.OpenGraphMetaTags)
+    {
+        Html.AddHeadCustomParts($"<meta property=\"og:type\" content=\"product\" />");
+        Html.AddHeadCustomParts($"<meta property=\"og:title\" content=\"{Html.Encode(Model.Name)}\" />");
+        Html.AddHeadCustomParts($"<meta property=\"og:description\" content=\"{Html.Encode(Nop.Core.Html.HtmlHelper.StripTags(Model.MetaDescription))}\" />");
+        Html.AddHeadCustomParts($"<meta property=\"og:image\" content=\"{mainImageUrlFull}\" />");
+        Html.AddHeadCustomParts($"<meta property=\"og:image:url\" content=\"{mainImageUrlFull}\" />");
+        Html.AddHeadCustomParts($"<meta property=\"og:url\" content=\"{webHelper.GetThisPageUrl(true)}\" />");
+        Html.AddHeadCustomParts($"<meta property=\"og:site_name\" content=\"{Html.Encode(Model.CurrentStoreName)}\" />");
+    }
+
+    if (seoSettings.TwitterMetaTags)
+    {
+        Html.AddHeadCustomParts($"<meta property=\"twitter:card\" content=\"summary\" />");
+        Html.AddHeadCustomParts($"<meta property=\"twitter:site\" content=\"{Html.Encode(Model.CurrentStoreName)}\" />");
+        Html.AddHeadCustomParts($"<meta property=\"twitter:title\" content=\"{Html.Encode(Model.Name)}\" />");
+        Html.AddHeadCustomParts($"<meta property=\"twitter:description\" content=\"{Html.Encode(Nop.Core.Html.HtmlHelper.StripTags(Model.MetaDescription))}\" />");
+        Html.AddHeadCustomParts($"<meta property=\"twitter:image\" content=\"{mainImageUrlFull}\" />");
+        Html.AddHeadCustomParts($"<meta property=\"twitter:url\" content=\"{webHelper.GetThisPageUrl(true)}\" />");
+    }
+
+    Html.AddHeadCustomParts("<meta property=\"availability\" content=\"" + (Model.DisableBuyButton ? "outofstock" : "instock") + "\" />");
+
+    var showMobileMoreDescriptionButton =
+        !string.IsNullOrWhiteSpace(Model.FullDescription) ||
+        (!string.IsNullOrWhiteSpace(Model.ShortDescription) && !string.IsNullOrWhiteSpace(Model.ShortDescription.HtmlToText()));
+    var dataDictPrice = new ViewDataDictionary(ViewData);
+    var dataDictAttributes = new ViewDataDictionary(ViewData);
+    decimal discountAmount = 0;
+    decimal discountPercentage = 0;
+
+    Model.ProductPrice.PriceWithDiscount.ConvertStringifiedPriceToDecimal(out decimal priceWithDiscount);
+    var priceStr = priceWithDiscount > decimal.Zero ? priceWithDiscount.ToString("#.######") : Model.ProductPrice.PriceValue.ToString("#.######");
+    priceStr.ConvertStringifiedPriceToDecimal(out decimal price);
+
+    Model.ProductPrice.Price.ConvertStringifiedPriceToDecimal(out decimal oldPrice);
+    if (!string.IsNullOrEmpty(Model.ProductPrice.Price))
+    {
+        Model.ProductPrice.Price.ConvertStringifiedPriceToDecimal(out decimal basePrice);
+        if (basePrice > 0)
+        {
+            oldPrice = basePrice;
+        }
+    }
+    Model.ProductPrice.OldPrice.ConvertStringifiedPriceToDecimal(out decimal oldPriceProduct);
+    oldPrice = Math.Max(oldPriceProduct, oldPrice);
+
+    if (oldPrice > 0)
+    {
+        discountAmount = Convert.ToInt32(oldPrice - price);
+        discountPercentage = Convert.ToInt32(discountAmount * 100 / oldPrice);
+    }
+
+    Html.AddHeadCustomParts("<style> body.page-product .km-product-page-content .km-product-content-short-description:after { content:unset !important;  } </style>");
+    var dataDictAddToCart = new ViewDataDictionary(ViewData);
+    var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
+
+    var stockAvailability = !Model.DisableBuyButton && !Model.ProductPrice.CallForPrice;
+    var stockAvailabilityContent = stockAvailability ? "instock" : "outofstock";
+    var productAttributeValues = Model.ProductAttributes.Select(x => x.Values).ToList();
+
+    Html.AppendHeadCustomParts($"<meta name=\"availability\" content=\"{stockAvailabilityContent}\">");
+    if (!Model.DisableBuyButton && !Model.AddToCart.CallForPrice && !Model.AddToCart.CustomerEntersPrice)
+    {
+        Html.AppendHeadCustomParts($"<meta name=\"product_price\" content=\"{price}\">");
+        Html.AppendHeadCustomParts($"<meta name=\"product_old_price\" content=\"{oldPrice}\">");
+    }
+
+    string productBasepriceUnitName = string.Empty;
+    bool basepriceEnabled = Model.BasepriceEnabled;
+    if (basepriceEnabled)
+    {
+        productBasepriceUnitName = Model.BasepriceUnitName;
+    }
+
+    Html.AppendScriptParts(ResourceLocation.Footer, $"~/Plugins/Widgets.B2CGold/wwwroot/assets/js/productGold.js", $"~/Plugins/Widgets.B2CGold/wwwroot/assets/js/productGold.js", excludeFromBundle: true);
+
+     Html.AppendCssFileParts(ResourceLocation.Head, "~/lib/themes/ryan/assets/css/productGold.css");
+
+}
+
+<style type="text/css">
+
+   @if(UAH.IsMobileDevice()){
+        <text>
+            body.page-product .vp-bottom-sheet {
+                   display: none !important;
+             }
+
+            .vp-product-item-theme.vp-theme-mobile-cart > .vp-content .vp-price-list {
+                display: none !important;
+            }
+
+            .vp-container-footer-cart-box.km-btn.km-theme-2.km-mt-full.km-next-step1 {
+                max-width: 158px !important;
+            }
+
+            @@media only screen and (min-width: 0px) and (max-width: 959px) {
+                .vp-container-footer-cart-box .km-btn.km-theme-2 {
+                    max-width: 158px !important;
+                }
+            }
+        </text>
+    }
+    else
+    {
+        <text>
+        .product-type-add-image img {
+            width: 36px ;
+            height: 36px;
+        }
+        </text>
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .textMoreSelect {
+        opacity: 0;
+    }
+
+    body.page-product .km-product-page-content .km-product-detail-content-title > .km-title {
+        color: #0c0c0c !important;
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        line-height: 2.15;
+    }
+
+    .km-product-detail-content-title.justDesktop > .km-description {
+        color: #0c0c0c !important;
+        font-family: yekanbakhen;
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        line-height: 2.15;
+    }
+
+    @@media only screen and (min-width: 0px) and (max-width: 959px) {
+        .km-title-title h1 {
+            font-size: 1.1rem !important;
+        }
+
+        body.page-product .km-product-page-top .km-product-left .km-product-brand {
+            border-top: 0.2px solid #f2f2f2 !important;
+            margin-bottom: -16px !important;
+            padding-top: 8px !important;
+            margin-top: 32px !important;
+            padding-bottom: 8px !important;
+        }
+
+        .navCategory {
+            padding: 0px 8px;
+            margin-top: -8px;
+        }
+
+        body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature ul.moreStep li {
+            margin-bottom: unset !important;
+            margin-bottom: 4px;
+        }
+    }
+
+    .km-product-element-title-mobile .km-title, .more-feature .km-title {
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        line-height: 2.15;
+        color: #0c0c0c !important;
+        margin-right: 4px;
+    }
+
+    .km-product-short-description-mobile.justMobileTablet ul,
+    .km-product-short-description-mobile.justMobileTablet p {
+        line-height: 1.4;
+        font-size: 1.0rem !important;
+        color: #0c0c0c !important;
+        font-weight: 400 !important;
+    }
+
+    .km-product-content-short-description1 .km-text-render p {
+        font-size: 14px;
+    }
+
+    .km-product-element-title-mobile ~ * {
+        margin: 24px 24px 24px 0px;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature ul.moreStep li {
+        margin-bottom: unset !important;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature .km-title {
+        margin-bottom: 12px;
+        color: #0c0c0c !important;
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        line-height: 2.15;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature ul.moreStep .products-attribute-title {
+        color: #81858b !important;
+        font-size: 0.95rem !important;
+        font-weight: 400 !important;
+        line-height: 2.15;
+    }
+
+    .km-product-more-details span.products-attribute-value {
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        line-height: 2.15;
+        color: #424750 !important;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-title {
+        padding-bottom: calc(24px - 4px) !important;
+    }
+
+    .km-title-title h1 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #0c0c0c;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-title .km-title-en {
+        color: #979797;
+        display: block;
+        margin: 8px 0;
+        font-size: 0.8rem;
+        font-weight: 400;
+        line-height: 2.17;
+    }
+
+    i.fal.fa-bell {
+        margin: 0px 5px;
+    }
+
+    button.unavailable-btn {
+        background-color: #009688 !important;
+        word-spacing: 3px;
+    }
+
+    .km-addtocart-notic .km-title span {
+        padding: 4px 24px !important;
+        border-radius: 8px !important;
+    }
+
+    .km-addtocart-notic {
+        border: unset !important;
+        background: unset !important;
+        padding: 20px !important;
+        margin-bottom: 32px !important;
+    }
+
+        .km-addtocart-notic .km-title {
+            margin-bottom: 24px !important;
+        }
+
+            .km-addtocart-notic .km-title:before {
+                height: 0.1px !important;
+                background: #ebebeb !important;
+            }
+
+        .km-addtocart-notic .km-description {
+            font-size: 14px !important;
+            text-align: right !important;
+            line-height: 24px;
+        }
+
+    .km-detail.km-product-category .km-value, .km-detail.km-brand .km-value {
+        color: #19bfd3;
+        font-size: 0.95rem;
+        font-weight: 400;
+        line-height: 2.1;
+    }
+
+    .km-detail.km-product-category {
+        margin-right: 24px;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature ul.moreStep .products-attribute-title {
+        font-family: 'yekanbakhen' !important;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature p {
+        font-size: 1rem;
+        line-height: 2rem;
+        font-weight: 700;
+    }
+
+    .vp
+    .km-text-summarizer-content p {
+        font-family: 'yekanbakhen' !important;
+    }
+
+    body.page-product .km-product-page-content .km-product-fields > .km-group > .km-fields .km-field > .km-value {
+        text-align: right;
+        color: #000000 !important;
+    }
+
+</style>
+
+<style type="text/css">
+    .page-product .km-cart-content-left.sticky-mode .payPdp + div.d-flex .cart-item,
+    .page-product .km-cart-content-left.sticky-mode .payPdp + div.d-flex .addProductBtnParent {
+        top: 36px;
+    }
+
+    .page-product .km-product-left-left .box-product + div.d-flex .cart-item,
+    .page-product .km-product-left-left .box-product + div.d-flex .addProductBtnParent {
+        top: -36px;
+    }
+
+    .page-product .km-product-left-left .box-product + div.d-flex .cart-item {
+        right: 16px;
+        width: calc(30% - 26px);
+    }
+
+    .page-product .km-product-left-left .box-product + div.d-flex .addProductBtnParent {
+        left: 16px;
+        width: calc(70% - 16px);
+    }
+
+    .page-product .km-product-left-left .box-product {
+        margin-top: 16px;
+    }
+
+    .page-product .km-product-left-left .vp-product-item {
+        margin-bottom: 0 !important;
+    }
+
+    .page-product .cart-item {
+        right: 0;
+        left: unset;
+        display: flex;
+        width: 30%;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .box-product .vp-product-item-theme-v2.cart-item {
+        transform: unset !important;
+    }
+
+    .km-cart-content-left.type2.sticky-mode.justDesktop.show .cart-item {
+        position: absolute;
+        transform: translateY(-50%);
+    }
+
+    .page-product .cart-item {
+        position: unset;
+        top: calc(100% - 40px);
+        margin-left: 10px;
+    }
+
+        .page-product .cart-item .vp-cart-item {
+            display: inline-block;
+            position: relative;
+            width: 100%;
+            height: 48px;
+            line-height: 48px;
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid #f2f2f2;
+            transition: all 0.3s ease-in-out;
+        }
+
+    .page-product .justDesktop .cart-item .vp-cart-item {
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 8px;
+    }
+
+    .page-product .bottom-fix-pdp-mobile .justMobileTablet {
+        width: 100%;
+        display: flex;
+    }
+
+    .page-product .bottom-fix-pdp-mobile .km-btn.km-theme-2 {
+        height: 48px;
+    }
+
+    .page-product .justMobileTablet .cart-item .vp-cart-item {
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 1px 6px rgb(0 0 0 / 10%);
+        border-radius: 16px;
+    }
+
+    .page-product .cart-item .vp-cart-item .vp-btn.vp-plus,
+    .page-product .cart-item .vp-cart-item .vp-btn.vp-minus {
+        border: 0;
+        line-height: 48px;
+        color: #eb3a3a;
+        z-index: 2;
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 28px;
+        text-align: center;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .page-product .cart-item .vp-cart-item .vp-btn.vp-plus {
+        right: 0;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .page-product .cart-item .vp-cart-item .vp-btn.vp-minus {
+        left: 0;
+        border-radius: 8px 0 0 8px;
+    }
+
+        .page-product .cart-item .vp-cart-item .vp-btn.vp-plus.p-event,
+        .page-product .cart-item .vp-cart-item .vp-btn.vp-minus.p-event {
+            pointer-events: none;
+            color: #E6E6E6;
+        }
+
+        .page-product .cart-item .vp-cart-item .vp-btn.vp-plus i.fal,
+        .page-product .cart-item .vp-cart-item .vp-btn.vp-minus i.fal {
+            font-size: 17px;
+            vertical-align: middle;
+        }
+
+    .page-product .cart-item .vp-cart-item .vp-loading {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        z-index: 4;
+        background: rgba(255, 255, 255, 0.9);
+        color: #eb3a3a;
+        font-size: 18px;
+        display: none;
+    }
+
+        .page-product .cart-item .vp-cart-item .vp-loading i.fal {
+            vertical-align: middle;
+        }
+
+    .page-product .cart-item .vp-cart-item .vp-input input {
+        display: block !important;
+        border: 0;
+        background: transparent;
+        font-size: 17px;
+        color: #000;
+        text-align: center;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        opacity: 1;
+        visibility: visible;
+        transition: all 0.3s ease-in-out;
+        font-family: 'yekanbakh';
+    }
+
+    .page-product .addProductBtnParent {
+        align-self: flex-end;
+        display: flex;
+        justify-content: flex-end;
+        position: absolute;
+        left: 0;
+        flex: 1 0 20%;
+        width: calc(70% - 10px);
+    }
+
+    .page-product .justDesktop .addProductBtnParent {
+        transform: translateY(-50%);
+    }
+
+    .page-product .btn-not-available {
+        margin-top: 36px;
+        margin-bottom: -32px;
+    }
+
+    .page-product .km-product-selected-details {
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+        .page-product .km-product-selected-details .contactsUsBox .d-flex {
+            margin: 10px 0;
+        }
+
+        .page-product .km-product-selected-details .contactsUsBox .icon i {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .page-product .km-product-selected-details .contactsUsBox a.km-btn.km-theme-2 i,
+        .page-product .call-us-btn.km-btn.km-theme-2 i,
+        .page-product .bottom-fix-pdp-mobile .km-btn.km-theme-2 i {
+            position: unset;
+            font-size: 22px;
+            transform: translateY(12%);
+        }
+
+    .page-product .km-cart-content-left .payPdp .first {
+        margin-bottom: 0 !important;
+        border-bottom: unset !important;
+    }
+
+    .page-product .km-cart-content-left .payPdp .featureProduct {
+        margin-bottom: 0 !important;
+        border-top: 1px solid #e6e6e6;
+        padding-top: 16px;
+    }
+
+    .page-product .km-cart-content-left .payPdp + .d-flex .contactsUsBox .contacts-us-box-title,
+    .page-product .km-cart-content-left .payPdp + .d-flex .contactsUsBox .contacts-us-box-phone,
+    .page-product .km-cart-content-left .payPdp + .d-flex .contactsUsBox hr.line {
+        display: none !important;
+    }
+
+    .km-addtocart-notic {
+        margin-bottom: 0 !important;
+    }
+
+    .user-rating .content .rating-container .rating-line .line {
+        font-family: 'yekanbakh';
+    }
+
+    :root {
+        --star-size: 60px;
+        --star-color: #dee2e6;
+        --star-background: #ffe234;
+    }
+
+    .stars:before {
+        letter-spacing: -2px !important;
+    }
+
+    .km-text-summarizer-content .justMobileTablet iframe {
+        width: 100%;
+    }
+
+    .km-product-page-top .vp-gallery-theme .vp-gallery-big img {
+        object-fit: contain;
+    }
+
+    .km-product-content .km-text-render p,
+    .km-product-content .km-text-render h1,
+    .km-product-content .km-text-render h2,
+    .km-product-content .km-text-render h3,
+    .km-product-content .km-text-render h4,
+    .km-product-content .km-text-render h5,
+    .km-product-content .km-text-render h6 {
+        display: block;
+        min-height: 27px;
+        margin-bottom: 0 !important;
+    }
+
+    .km-text-summarizer-content table[border] {
+        border: 5px solid #000;
+    }
+
+        .km-text-summarizer-content table[border] td {
+            border: 1px solid #8a8a8a;
+            padding: 5px;
+        }
+
+    .km-product-page-top table.shop_attributes {
+        width: 100%;
+    }
+
+    .box-product.justDesktop {
+        margin-bottom: 16px;
+    }
+
+    @@media only screen and (min-width: 0px) and (max-width: 959px) {
+        body.page-product .km-product-action-more .km-menu.km-favorite:hover span,
+        body.page-product .km-product-action-more .km-menu.km-share:hover span {
+            visibility: hidden;
+        }
+    }
+</style>
+
+<style type="text/css">
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .textMoreSelect {
+        opacity: 0;
+    }
+
+    body.page-product .km-product-page-content .km-product-detail-content-title > .km-title {
+        color: #0c0c0c !important;
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        line-height: 2.15;
+    }
+
+    .km-product-detail-content-title.justDesktop > .km-description {
+        color: #0c0c0c !important;
+        font-family: yekanbakhen;
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        line-height: 2.15;
+    }
+
+    @@media only screen and (min-width: 0px) and (max-width: 959px) {
+        .km-title-title h1 {
+            font-size: 1.1rem !important;
+        }
+
+        body.page-product .km-product-page-top .km-product-left .km-product-brand {
+            border-top: 0.2px solid #f2f2f2 !important;
+            margin-bottom: -16px !important;
+            padding-top: 8px !important;
+            margin-top: 32px !important;
+            padding-bottom: 8px !important;
+        }
+
+        .navCategory {
+            padding: 0px 8px;
+            margin-top: -8px;
+        }
+
+        body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature ul.moreStep li {
+            margin-bottom: unset !important;
+            margin-bottom: 4px;
+        }
+    }
+
+    .km-product-element-title-mobile .km-title, .more-feature .km-title {
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        line-height: 2.15;
+        color: #0c0c0c !important;
+        margin-right: 4px;
+    }
+
+    .km-product-short-description-mobile.justMobileTablet ul,
+    .km-product-short-description-mobile.justMobileTablet p {
+        line-height: 1.4;
+        font-size: 1.0rem !important;
+        color: #0c0c0c !important;
+        font-weight: 400 !important;
+    }
+
+    .km-product-content-short-description1 .km-text-render p {
+        font-size: 14px;
+    }
+
+    .km-product-element-title-mobile ~ * {
+        margin: 24px 24px 24px 0px;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature ul.moreStep li {
+        margin-bottom: unset !important;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature .km-title {
+        margin-bottom: 12px;
+        color: #0c0c0c !important;
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        line-height: 2.15;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature ul.moreStep .products-attribute-title {
+        color: #81858b !important;
+        font-size: 0.95rem !important;
+        font-weight: 400 !important;
+        line-height: 2.15;
+    }
+
+    .km-product-more-details span.products-attribute-value {
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        line-height: 2.15;
+        color: #424750 !important;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-title {
+        padding-bottom: calc(24px - 4px) !important;
+    }
+
+    .km-title-title h1 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: #0c0c0c;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-title .km-title-en {
+        color: #979797;
+        display: block;
+        margin: 8px 0;
+        font-size: 0.8rem;
+        font-weight: 400;
+        line-height: 2.17;
+    }
+
+    i.fal.fa-bell {
+        margin: 0px 5px;
+    }
+
+    button.unavailable-btn {
+        background-color: #009688 !important;
+        word-spacing: 3px;
+    }
+
+    .km-addtocart-notic .km-title span {
+        padding: 4px 24px !important;
+        border-radius: 8px !important;
+    }
+
+    .km-addtocart-notic {
+        border: unset !important;
+        background: unset !important;
+        padding: 20px !important;
+        margin-bottom: 32px !important;
+    }
+
+        .km-addtocart-notic .km-title {
+            margin-bottom: 24px !important;
+        }
+
+            .km-addtocart-notic .km-title:before {
+                height: 0.1px !important;
+                background: #ebebeb !important;
+            }
+
+        .km-addtocart-notic .km-description {
+            font-size: 14px !important;
+            text-align: right !important;
+            line-height: 24px;
+        }
+
+    .km-detail.km-product-category .km-value, .km-detail.km-brand .km-value {
+        color: #19bfd3;
+        font-size: 0.95rem;
+        font-weight: 400;
+        line-height: 2.1;
+    }
+
+    .km-detail.km-product-category {
+        margin-right: 24px;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .km-product-more-details .more-feature ul.moreStep .products-attribute-title {
+        font-family: 'yekanbakhen' !important;
+    }
+
+    .vp
+    .km-text-summarizer-content p {
+        font-family: 'yekanbakhen' !important;
+    }
+
+    body.page-product .km-product-page-content .km-product-fields > .km-group > .km-fields .km-field > .km-value {
+        text-align: right;
+        color: #000000 !important;
+    }
+
+</style>
+
+<style type="text/css">
+    .page-product .km-cart-content-left.sticky-mode .payPdp + div.d-flex .cart-item,
+    .page-product .km-cart-content-left.sticky-mode .payPdp + div.d-flex .addProductBtnParent {
+        top: 36px;
+    }
+
+    .page-product .km-product-left-left .box-product + div.d-flex .cart-item,
+    .page-product .km-product-left-left .box-product + div.d-flex .addProductBtnParent {
+        top: -36px;
+    }
+
+    .page-product .km-product-left-left .box-product + div.d-flex .cart-item {
+        right: 16px;
+        width: calc(30% - 26px);
+    }
+
+    .page-product .km-product-left-left .box-product + div.d-flex .addProductBtnParent {
+        left: 16px;
+        width: calc(70% - 16px);
+    }
+
+    .page-product .km-product-left-left .box-product {
+        margin-top: 16px;
+    }
+
+    .page-product .km-product-left-left .vp-product-item {
+        margin-bottom: 0 !important;
+    }
+
+    .page-product .cart-item {
+        right: 0;
+        left: unset;
+        display: flex;
+        width: 30%;
+    }
+
+    body.page-product .km-product-page-top .km-product-left .box-product .vp-product-item-theme-v2.cart-item {
+        transform: unset !important;
+    }
+
+    .km-cart-content-left.type2.sticky-mode.justDesktop.show .cart-item {
+        position: absolute;
+        transform: translateY(-50%);
+    }
+
+    .page-product .cart-item {
+        position: unset;
+        top: calc(100% - 40px);
+        margin-left: 10px;
+    }
+
+        .page-product .cart-item .vp-cart-item {
+            display: inline-block;
+            position: relative;
+            width: 100%;
+            height: 48px;
+            line-height: 48px;
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid #f2f2f2;
+            transition: all 0.3s ease-in-out;
+        }
+
+    .page-product .justDesktop .cart-item .vp-cart-item {
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 8px;
+    }
+
+    .page-product .bottom-fix-pdp-mobile .justMobileTablet {
+        width: 100%;
+        display: flex;
+    }
+
+    .page-product .bottom-fix-pdp-mobile .km-btn.km-theme-2 {
+        height: 48px;
+    }
+
+    .page-product .justMobileTablet .cart-item .vp-cart-item {
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 1px 6px rgb(0 0 0 / 10%);
+        border-radius: 16px;
+    }
+
+    .page-product .cart-item .vp-cart-item .vp-btn.vp-plus,
+    .page-product .cart-item .vp-cart-item .vp-btn.vp-minus {
+        border: 0;
+        line-height: 48px;
+        color: #eb3a3a;
+        z-index: 2;
+        position: absolute;
+        top: 0;
+        height: 100%;
+        width: 28px;
+        text-align: center;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .page-product .cart-item .vp-cart-item .vp-btn.vp-plus {
+        right: 0;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .page-product .cart-item .vp-cart-item .vp-btn.vp-minus {
+        left: 0;
+        border-radius: 8px 0 0 8px;
+    }
+
+        .page-product .cart-item .vp-cart-item .vp-btn.vp-plus.p-event,
+        .page-product .cart-item .vp-cart-item .vp-btn.vp-minus.p-event {
+            pointer-events: none;
+            color: #E6E6E6;
+        }
+
+        .page-product .cart-item .vp-cart-item .vp-btn.vp-plus i.fal,
+        .page-product .cart-item .vp-cart-item .vp-btn.vp-minus i.fal {
+            font-size: 17px;
+            vertical-align: middle;
+        }
+
+    .page-product .cart-item .vp-cart-item .vp-loading {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        z-index: 4;
+        background: rgba(255, 255, 255, 0.9);
+        color: #eb3a3a;
+        font-size: 18px;
+        display: none;
+    }
+
+        .page-product .cart-item .vp-cart-item .vp-loading i.fal {
+            vertical-align: middle;
+        }
+
+    .page-product .cart-item .vp-cart-item .vp-input input {
+        display: block !important;
+        border: 0;
+        background: transparent;
+        font-size: 17px;
+        color: #000;
+        text-align: center;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        opacity: 1;
+        visibility: visible;
+        transition: all 0.3s ease-in-out;
+        font-family: 'yekanbakh';
+    }
+
+    .page-product .addProductBtnParent {
+        align-self: flex-end;
+        display: flex;
+        justify-content: flex-end;
+        position: absolute;
+        left: 0;
+        flex: 1 0 20%;
+        width: calc(70% - 10px);
+    }
+
+    .page-product .justDesktop .addProductBtnParent {
+        transform: translateY(-50%);
+    }
+
+    .page-product .btn-not-available {
+        margin-top: 36px;
+        margin-bottom: -32px;
+    }
+
+    .page-product .km-product-selected-details {
+        width: 100%;
+        margin-bottom: 0;
+    }
+
+        .page-product .km-product-selected-details .contactsUsBox .d-flex {
+            margin: 10px 0;
+        }
+
+        .page-product .km-product-selected-details .contactsUsBox .icon i {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .page-product .km-product-selected-details .contactsUsBox a.km-btn.km-theme-2 i,
+        .page-product .call-us-btn.km-btn.km-theme-2 i,
+        .page-product .bottom-fix-pdp-mobile .km-btn.km-theme-2 i {
+            position: unset;
+            font-size: 22px;
+            transform: translateY(12%);
+        }
+
+    .page-product .km-cart-content-left .payPdp .first {
+        margin-bottom: 0 !important;
+        border-bottom: unset !important;
+    }
+
+    .page-product .km-cart-content-left .payPdp .featureProduct {
+        margin-bottom: 0 !important;
+        border-top: 1px solid #e6e6e6;
+        padding-top: 16px;
+    }
+
+    .page-product .km-cart-content-left .payPdp + .d-flex .contactsUsBox .contacts-us-box-title,
+    .page-product .km-cart-content-left .payPdp + .d-flex .contactsUsBox .contacts-us-box-phone,
+    .page-product .km-cart-content-left .payPdp + .d-flex .contactsUsBox hr.line {
+        display: none !important;
+    }
+
+    .km-addtocart-notic {
+        margin-bottom: 0 !important;
+    }
+
+    .user-rating .content .rating-container .rating-line .line {
+        font-family: 'yekanbakh';
+    }
+</style>
+
+
+<style>
+    :root {
+        --star-size: 60px;
+        --star-color: #dee2e6;
+        --star-background: #ffe234;
+    }
+
+    .stars:before {
+        letter-spacing: -2px !important;
+    }
+
+    .km-text-summarizer-content .justMobileTablet iframe {
+        width: 100%;
+    }
+
+    .km-product-page-top .vp-gallery-theme .vp-gallery-big img {
+        object-fit: contain;
+    }
+
+    .km-product-content .km-text-render p,
+    .km-product-content .km-text-render h1,
+    .km-product-content .km-text-render h2,
+    .km-product-content .km-text-render h3,
+    .km-product-content .km-text-render h4,
+    .km-product-content .km-text-render h5,
+    .km-product-content .km-text-render h6 {
+        display: block;
+        min-height: 27px;
+        margin-bottom: 0 !important;
+    }
+
+    .km-text-summarizer-content table[border] {
+        border: 5px solid #000;
+    }
+
+        .km-text-summarizer-content table[border] td {
+            border: 1px solid #8a8a8a;
+            padding: 5px;
+        }
+
+    .km-product-page-top table.shop_attributes {
+        width: 100%;
+    }
+
+    .box-product.justDesktop {
+        margin-bottom: 16px;
+    }
+
+    @@media only screen and (min-width: 0px) and (max-width: 959px) {
+        body.page-product .km-product-action-more .km-menu.km-favorite:hover span,
+        body.page-product .km-product-action-more .km-menu.km-share:hover span {
+            visibility: hidden;
+        }
+    }
+
+</style>
+
+@*B2CGold Conditonail preorder*@
+
+@if (Model.AddToCart.AvailableForPreOrder && Model.IsDesktopDevice)
+{
+    <style>
+    .product-preparation-desk .product-preparation-bottom{
+          border-top: 1px solid #ffffff;
+          margin-top: 24px;
+          padding-top: 16px;
+    }
+    </style>
+}
+
+@section Breadcrumb{
+    @await Html.PartialAsync("_ProductBreadcrumb", Model.Breadcrumb)
+}
+
+
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsAfterBreadcrumb, additionalData = Model })
+
+@if (Model.IsMobileDevice)
+{
+    <section class="justMobileTablet">
+        <div class="vp-toolbar-productItem topStyle d-flex">
+            <a class="vp-toolbaricon" href="javascript:void(0)" onclick="history.go(-1)">
+                <i class="backIcon icon fal fa-angle-right"></i>
+            </a>
+            <div class="vp-toolbarTitle">
+                <!--<span class="vp-title">برگشت</span>-->
+            </div>
+            <div class="vp-icons-toolbar d-flex flex-y-center">
+                <div class="vp-icons-toolbar home-icon">
+                    <a href="/">
+                        <img alt="home" src="~/lib/themes/ryan/assets/img/icons/home-icon.svg">
+                    </a>
+                </div>
+                <div class="vp-icons-toolbar search-icon" id="pdpSeachBoxbtn">
+                    <a>
+                        <img alt="search" src="~/lib/themes/ryan/assets/img/icons/search-icon.svg">
+                    </a>
+                </div>
+                <div class="vp-icons-toolbar more-option">
+                    <img src="~/lib/themes/ryan/assets/img/icons/more-icon.svg" alt="see more">
+                    <div class="shareShow">
+                        <div class="item" id="pdpCategory">
+                            <a>
+                                <i class="fal fa-box"></i>
+                                <span>@T("Category")</span>
+                            </a>
+                        </div>
+                        <div class="item" id="pdpProfile">
+                            <a>
+                                <i class="fal fa-user"></i>
+                                @if (Model.IsCustomerAuthenticated)
+                                {
+                                    <span>@T("Profile")</span>
+                                }
+                                else
+                                {
+                                    <span>@T("SignIn")</span>
+                                }
+                            </a>
+                        </div>
+                        <div class="vp-icons-toolbar cart-icon">
+                            <i class="fal fa-shopping-bag"></i>
+                            <span>@T("Cart")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+<section class="km-product-page-top km-box-style km-padding after-clear km-has-deals">
+
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsTop, additionalData = Model })
+
+    <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
+        <input name="product_id" type="hidden" value="@Model.Id" />
+        <input name="ManageInventoryMethod" type="hidden" value="@Model.ManageInventoryMethod" />
+        <input name="RedirectToCartAfterAddToCart" type="hidden" value="@Model.RedirectToCartAfterAddToCartProductPageRequired" />
+        <input name="@($"addtocart_{Model.Id}.EnteredQuantity")" id="pdpCustomQuantity" type="hidden" value="@Model.OrderMinimumQuantity" />
+        <div class="row">
+            <div class="col-4 col-mn-12">
+                @if (!Model.IsMobileDevice)
+                {
+                    <div class="justDesktop h100">
+                        <div class="vp-product-top sticky-mode" style="top: 135px">
+                            <div class="vp-product-top-right">
+                                @await Html.PartialAsync("_DesktopDeals", Model)
+                                <div class="km-product-action-more justDesktop">
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsInsideOverviewButtonsBefore, additionalData = Model })
+                                    @{
+                                        dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";
+                                        @await Html.PartialAsync("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
+                                    }
+                                    <div class="km-menu km-share justDesktop" km-action="share">
+                                        <i class="fal fa-share-alt"></i>
+                                        <span>@T("ProductDetails.Share")</span>
+                                    </div>
+                                    @if (Model.ProductReviewOverview.ShowCompareBtn && Model.CompareProductsEnabled)
+                                    {
+                                        @await Html.PartialAsync("_CompareProductsButton", Model)
+                                    }
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsInsideOverviewButtonsAfter, additionalData = Model })
+                                </div>
+                                @await Html.PartialAsync("_ProductDetailsPictures", Model)
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Model.IsMobileDevice)
+                {
+                    <div class="justMobileTablet">
+                        <div class="km-product-right sticky-mode" style="top: 135px">
+                            <div class="km-product-action-more justMobileTablet">
+                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsInsideOverviewButtonsBefore, additionalData = Model })
+                                <div class="d-flex flex-x-spaceBetween flex-y-center">
+                                    <div class="d-flex">
+                                        @if (Model.ProductReviewOverview.ShowCompareBtn)
+                                        {
+                                            @await Html.PartialAsync("_CompareProductsButton", Model)
+                                        }
+                                        @if (!Model.DisableWishlistButton)
+                                        {
+                                            dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";
+                                            @await Html.PartialAsync("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
+                                        }
+                                        <div class="km-menu km-share" km-action="share">
+                                            <i class="fal fa-share-alt"></i> <span>@T("Common.Share")</span>
+                                        </div>
+                                    </div>
+                                    @if (Model.ProductReviewOverview.Rating > 0)
+                                    {
+                                        <div class="km-rate-title">
+                                            <span>@(Model.ProductReviewOverview.Rating)</span>
+                                            <img src="~/lib/themes/ryan/assets/img/icons/Star-Filled.svg" alt="star filled rate">
+                                        </div>
+                                    }
+                                </div>
+                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsInsideOverviewButtonsAfter, additionalData = Model })
+                            </div>
+                            @await Html.PartialAsync("_ProductDetailsPicturesMobile", Model)
+                            @await Html.PartialAsync("_DesktopDeals", Model)
+                        </div>
+                    </div>
+                }
+                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsEssentialTop, additionalData = Model })
+            </div>
+            <div class="col-8 col-mn-12">
+                <div class="km-product-left">
+                    @if (!Model.IsMobileDevice)
+                    {
+                        <div class="km-product-title justDesktop">
+                                   <div class="km-product-brand">
+
+                                @await Html.PartialAsync("_ProductManufacturers", Model.ProductManufacturers)
+
+                                @if (Model.Breadcrumb.CategoryBreadcrumb.Any())
+                                {
+                                    var breadCrumb = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault();
+                                    <div class="km-detail km-product-category">
+                                        <span class="products-attribute-title">@T("NopLine.Front.Category"):</span>
+                                        <a href="@Url.RouteUrl("Category", new { SeName = breadCrumb.SeName })" class="km-value">@breadCrumb.Name</a>
+                                    </div>
+                                }
+
+                            </div>
+                            @if (Model.Breadcrumb.CategoryBreadcrumb.Any())
+                                {
+                                    var breadCrumb = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault();
+                                    <div class="km-product-brand km-product-brand-seccond d-flex">
+                                            <div class="right d-inline-flex align-items-center">
+                                                <div class="km-detail km-brand">
+                                                    <a class="km-value" href="">
+                                                        <a href="@Url.RouteUrl("Category", new { SeName = breadCrumb.SeName })" class="km-value">@breadCrumb.Name</a>
+                                                    </a>
+                                                    <span class="km-separator">/</span>
+                                                </div>
+                                                <div class="km-detail km-product-category">
+                                                    <a class="km-value" href="">@Model.Name</a>
+                                                </div>
+                                                <div class="km-rate-title">
+                                                    <div>
+   
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="left">
+                                                <div class="id">
+                                                    <span class="text">شناسه کالا:</span>
+                                                    <span class="value">@Model.Sku</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                }
+                                        <div class="d-flex flex-x-spaceBetween">
+                                            <div class="km-title-title">
+                                                <h1 style="display: inline">
+                                                    @Model.Name
+                                                </h1>
+                                            </div>
+
+                                            <div class="km-rate-code">
+                                            </div>
+                                        </div>
+
+                                    </div>
+}
+
+                    
+                    @if (Model.IsMobileDevice)
+                    {
+                        <div class="justMobileTablet">
+                            <div class="km-product-title">
+                                <div class="d-flex flex-x-spaceBetween">
+                                    <div class="km-title-title">
+                                        <h1 style="display: inline">
+                                            @Model.Name
+                                        </h1>
+                                    </div>
+                                </div>
+                                @if (!string.IsNullOrWhiteSpace(Model.OfficialName))
+                                {
+                                    <h2 class="km-title-en">@Model.OfficialName</h2>
+                                }
+                                <div class="km-rate-code m-b-8">
+                                    <div class="km-detail km-product-code justMobileTablet">
+                                        <span class="km-title">@T("ProductDetails.ProductSkuOrId"):</span>
+                                        <span class="km-value" id="km-product-code-top">@Model.Sku</span>
+                                    </div>
+                                </div>
+                                <div class="weight-summary-pay">
+    <div class="name">وزن</div>
+    <div class="value">
+        <div class="weight-summary"></div>
+        <span class="text-value">گرم</span>
+    </div>
+</div>
+<div class="profit-summary-pay">
+    <div class="name">اجرت</div>
+    <div class="value ">
+        <div class="profit-summary"></div>
+        <span class="text-value">%</span>
+    </div>
+</div>
+                                @if (!Model.DisableBuyButton && !Model.AddToCart.CallForPrice && !Model.AddToCart.CustomerEntersPrice)
+                                {
+                                    @if(Model.AddToCart.AvailableForPreOrder){
+                                        <div class="preorder-price">
+                                                        <div class="text">پیش پرداخت:</div>
+                                                        <div class="value">
+                                                            <span class="main-value preorder-price-mobile-main"></span>
+                                                            <span class="text-value">
+                                                                تومان
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                    }
+                                    <div class="end-price">
+                                                        <div class="price-icon">
+                                                            <span class="icon">
+                                                                <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/dollar-circle.svg">
+                                                            </span>
+                                                            <span>
+                                                                قیمت نهایی :
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                    <div class="d-flex flex-y-center flex-x-spaceBetween">
+                                        @{
+                                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = $"price_{Model.Id}";
+                                            @await Html.PartialAsync("_ProductPrice", Model.ProductPrice, dataDictPrice)
+                                        }
+                                    </div>
+                                    @if (Model.DisplayStockQuantity)
+                                    {
+                                        if (Model.ManageInventoryMethod == Nop.Core.Domain.Catalog.ManageInventoryMethod.ManageStock)
+                                        {
+                                            <div class="product_inventory m-b-16">
+                                                <i class="fal fa-exclamation-circle"></i>
+                                                @Model.StockAvailability
+                                            </div>
+                                        }
+                                        else if (Model.ManageInventoryMethod == Nop.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByAttributes)
+                                        {
+                                            <div class="product_inventory combination m-b-16">
+                                            </div>
+                                        }
+
+                                    }
+                                }
+                                <div class="km-product-brand">
+                                    @await Html.PartialAsync("_ProductManufacturers", Model.ProductManufacturers)
+                                    @if (Model.Breadcrumb.CategoryBreadcrumb.Any())
+                                    {
+                                        var breadCrumb = Model.Breadcrumb.CategoryBreadcrumb.LastOrDefault();
+                                        <div class="km-detail km-product-category">
+                                            <span class="products-attribute-title">@T("NopLine.Front.Category"):</span>
+                                            <a href="@Url.RouteUrl("Category", new { SeName = breadCrumb.SeName })" class="km-value">@breadCrumb.Name</a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+
+                    <div class="row">
+                    <div class="col-7 col-md-6 col-mn-12">
+                            <div class="km-product-left-right">
+
+                                @if (Model.ProductAttributes.Any() && !Model.IsMobileDevice && !Model.DisableBuyButton)
+                                {
+                                    <div class="justDesktop km-product-more-details">
+                                        <div class="m-b-16 after-clear ">
+                                            @if (!Model.DisableBuyButton || Model.AddToCart.CustomerEntersPrice)
+                                            {
+                                                dataDictAttributes.TemplateInfo.HtmlFieldPrefix = $"attributes_{Model.Id}";
+                                                @await Html.PartialAsync("_ProductAttributes", Model, dataDictAttributes)
+                                            }
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (Model.ProductSpecifications.Any() && (Model.GroupedFeaturedSpecificationAttributes.Any() || Model.CatalogCustomFrameworkSettings.ShowAlwaysSpecificationAttributeOnTopOfPdp || Model.IsMobileDevice))
+                                {
+                                    <div class="km-product-more-details after-clear">
+                                        <div class="more-feature">
+                                            <div class="km-title">
+                                                @T(Model.IsMobileDevice ? "ProductDetails.ProductSpecifications" : "ProductDetails.FeaturedSpecifications")
+                                                <span class="km-show-product-custom-field km-show-more-btn justMobileTablet" km-id="custom-field">
+                                                    @T("ProductDetails.More")
+                                                    <i class="fal fa-angle-left"></i>
+                                                </span>
+                                            </div>
+                                            <ul class="moreStep">
+                                                @{
+                                                    if (Model.GroupedFeaturedSpecificationAttributes.Any())
+                                                    {
+                                                        foreach (var spc in Model.GroupedFeaturedSpecificationAttributes)
+                                                        {
+                                                            var keyName = spc.Key;
+                                                            if (string.IsNullOrEmpty(keyName))
+                                                            {
+                                                                keyName = spc.FirstOrDefault().TextPrompt;
+                                                            }
+                                                            <li>
+                                                                <span class="products-attribute-title">@keyName : </span>
+                                                                <span class="products-attribute-value">@Html.Raw(string.Join(" | ", spc.Select(a => a.ValueRaw)))</span>
+                                                            </li>
+                                                        }
+                                                    }
+                                                    else if (Model.CatalogCustomFrameworkSettings.ShowAlwaysSpecificationAttributeOnTopOfPdp || Model.IsMobileDevice)
+                                                    {
+                                                        foreach (var spc in Model.GroupedSpecificationAttributes.Take(4))
+                                                        {
+                                                            var keyName = spc.Key;
+                                                            if (string.IsNullOrEmpty(keyName))
+                                                            {
+                                                                keyName = spc.FirstOrDefault().Name;
+                                                            }
+                                                            <li>
+                                                                <span class="products-attribute-title">@keyName : </span>
+                                                                <span class="products-attribute-value">@Html.Raw(string.Join(" | ", spc.Select(a => a.ValueRaw)))</span>
+                                                            </li>
+                                                        }
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (Model.ShowProductWeightOnProductDetailsPage || Model.ShowProductDimensionsOnProductDetailsPage)
+                                {
+                                    <div class="km-product-more-details after-clear">
+                                        <div class="more-feature">
+                                            <ul class="moreStep">
+                                                @if (Model.ShowProductWeightOnProductDetailsPage && !string.IsNullOrWhiteSpace(Model.ProductWeight))
+                                                {
+                                                    <li>
+                                                        <span class="products-attribute-title">@T("product.weight") : </span>
+                                                        <span class="products-attribute-value">@Model.ProductWeight</span>
+                                                    </li>
+                                                }
+                                                @if (Model.ShowProductDimensionsOnProductDetailsPageInOneLine)
+                                                {
+                                                    <li>
+                                                        <span class="products-attribute-title">@T("product.dimensions") : </span>
+                                                        <span class="products-attribute-value">@Model.ProductDimensions</span>
+                                                    </li>
+                                                }
+                                                else if (Model.ShowProductDimensionsOnProductDetailsPage)
+                                                {
+                                                    if (!string.IsNullOrWhiteSpace(Model.ProductLength))
+                                                    {
+                                                        <li>
+                                                            <span class="products-attribute-title">@T("product.length") : </span>
+                                                            <span class="products-attribute-value">@Model.ProductLength</span>
+                                                        </li>
+                                                    }
+                                                    if (!string.IsNullOrWhiteSpace(Model.ProductWidth))
+                                                    {
+                                                        <li>
+                                                            <span class="products-attribute-title">@T("product.width") : </span>
+                                                            <span class="products-attribute-value">@Model.ProductWidth</span>
+                                                        </li>
+                                                    }
+                                                    if (!string.IsNullOrWhiteSpace(Model.ProductHeight))
+                                                    {
+                                                        <li>
+                                                            <span class="products-attribute-title">@T("product.height") : </span>
+                                                            <span class="products-attribute-value">@Model.ProductHeight</span>
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (!Model.IsMobileDevice && Model.CatalogCustomFrameworkSettings.ProductDescriptionShowOnTop && !string.IsNullOrEmpty(Model.ShortDescription) && !string.IsNullOrWhiteSpace(Model.ShortDescription.HtmlToText()))
+                                {
+                                    <div class="km-product-more-details after-clear">
+                                        <div class="more-feature">
+                                            <div class="km-title">
+                                                @T("ViraProcess.Pdp.Description")
+                                            </div>
+                                            <div class="" style="font-family:'yekanbakhen'">
+                                                @Html.Raw(Model.ShortDescription)
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (Model.DisplayProductTagsInProductDetailsPage && Model.DisplayProductTagsInTopSection && !Model.IsMobileDevice && Model.ProductTags != null && Model.ProductTags.Any())
+                                {
+                                    <div class="km-product-more-details after-clear justDesktop">
+                                        <div class="more-feature">
+                                            <div class="km-title">
+                                                @T("NopLine.pdp.ProductTags")
+                                            </div>
+                                            <ul class="RelatedTagItem">
+                                                @foreach (var productTag in Model.ProductTags)
+                                                {
+                                                    <li class="tagItem tag tag--bg-base-light">
+                                                        <a href="@(!string.IsNullOrWhiteSpace(productTag.ProductTagRelativeUrl) ? productTag.ProductTagRelativeUrl : "javascript:void(0)")">
+                                                            <span>
+                                                                @productTag.Name
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (Model.IsMobileDevice)
+                                {
+                                    if (Model.HasAnyDescription)
+                                    {
+                                        var fullDescTextLength = Model.FullDescription.HtmlToText().Length / 2;
+                                        var shortDescriptionMobile = !string.IsNullOrWhiteSpace(Model.ShortDescription) && !string.IsNullOrWhiteSpace(Model.ShortDescription.HtmlToText()) ?
+                                        Model.ShortDescription : !string.IsNullOrWhiteSpace(Model.FullDescription) && !string.IsNullOrWhiteSpace(Model.FullDescription.HtmlToText()) && Model.FullDescription.HtmlToText().Length <= 250 ?
+                                        Model.FullDescription.HtmlToText().SafeSubstring(0, Model.FullDescription.HtmlToText().Length / 2) : Model.FullDescription.HtmlToText().SafeSubstring(0, 100) + "...";
+
+                                        <div class="km-product-short-description-mobile justMobileTablet">
+                                            <div class="km-product-element-title-mobile">
+                                                <div class="km-title">@T("products.productdescription.completeoverview")</div>
+                                                @if (showMobileMoreDescriptionButton)
+                                                {
+                                                    <span class="km-show-product-full-content km-show-more-btn" km-id="custom-field">
+                                                        @T("ProductDetails.More")
+                                                        <i class="fal fa-angle-left"></i>
+                                                    </span>
+                                                }
+                                            </div>
+                                            <p class="justify">
+                                                @if (!string.IsNullOrWhiteSpace(Model.ShortDescription) && !string.IsNullOrWhiteSpace(Model.ShortDescription.HtmlToText()))
+                                                {
+                                                    @Html.Raw(shortDescriptionMobile)
+                                                }
+                                                else
+                                                {
+                                                    @shortDescriptionMobile.HtmlToText()
+                                                }
+                                            </p>
+                                        </div>
+                                    }
+                                    if (Model.IsMobileDevice)
+                                    {
+                                        var usageInstruction = Model.UsageInstruction;
+                                        var usageInstructionMobile = !string.IsNullOrWhiteSpace(usageInstruction) ? usageInstruction.HtmlToText() : string.Empty;
+                                        @if (!string.IsNullOrWhiteSpace(usageInstructionMobile) && usageInstructionMobile.Length > 250)
+                                        {
+                                            usageInstructionMobile = usageInstructionMobile.SafeSubstring(0, 250) + "...";
+                                            <div class="km-product-short-description-mobile justMobileTablet" style="margin-top:15px;">
+                                                <div class="km-product-element-title-mobile">
+                                                    <div class="km-title" style="margin-bottom:12px;">@T("ProductDetails.ProductUsageInstructions")</div>
+                                                    <span class="km-show-product-full-content-usageInstraction km-show-more-btn" id="usageInstraction" km-id="custom-field">
+                                                        @T("ProductDetails.More")
+                                                        <i class="fal fa-angle-left"></i>
+                                                    </span>
+                                                </div>
+                                                <div style="font-family:'yekanbakhen'">
+                                                    @usageInstructionMobile
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                    if (Model.ShowHelpBoxInProductDetailsPage)
+                                    {
+                                        <div class="km-product-help">
+                                            <div class=" justMobileTablet">
+                                                <div class="customerBox">
+                                                    <div class="first">
+                                                        <div>
+                                                            <div>
+                                                                <div class="title">@T("ProductDetails.HelpBox.NeedHelpTitle")</div>
+                                                                <div class="description">@T("ProductDetails.HelpBox.NeedHelpDescription")</div>
+                                                            </div>
+                                                            <a href="@(!string.IsNullOrWhiteSpace(Model.ProductDetailsHelpBoxPhoneNumberLink) ? Model.ProductDetailsHelpBoxPhoneNumberLink : $"tel:{Model.ProductDetailsHelpBoxPhoneNumber}")" target="_blank">
+                                                                <div class="d-flex flex-x-spaceBetween flex-y-center titles">
+                                                                    <div class="title">@T("ProductDetails.HelpBox.CallTitle")</div>
+                                                                    <div class="title title2">@Model.ProductDetailsHelpBoxPhoneNumber</div>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        
+                       <div class="col-5 col-md-6 col-mn-12">
+                        @if ((Model.ShowStoreOrSellerNameInProductDetailsPage && !string.IsNullOrWhiteSpace(Model.DefaultStoreName)) ||
+                                (Model.ShowGuaranteeInLeftSideBoxInProductDetailsPage && Model.HasGuarantee && !string.IsNullOrWhiteSpace(Model.GuaranteeDefaultName)) ||
+                                (Model.ShowDeliveryInfoInProductDetailsPage && Model.IsShipEnabled && (!string.IsNullOrWhiteSpace(Model.DeliveryDate) || Model.StockAvailabilityStatus)) ||
+                                (Model.ShowProductWarehouseNameInProductDetailsPage && !string.IsNullOrWhiteSpace(Model.WarehouseName)))
+                                {
+                                    if(!Model.AddToCart.AvailableForPreOrder){
+                                    <ul class="vp-product-item">
+                                        @if (Model.ShowStoreOrSellerNameInProductDetailsPage && !string.IsNullOrWhiteSpace(Model.DefaultStoreName))
+                                        {
+                                            <li>
+                                                <div class="vp-title">
+                                                    <img src="~/lib/themes/ryan/assets/test/icon-product-1.png" alt="product vendor icon image">
+                                                    @T("ProductDetails.ProductVendor"):
+                                                </div>
+                                                <div class="vp-value">@Model.DefaultStoreName</div>
+                                            </li>
+                                        }
+                                        @if (Model.ShowGuaranteeInLeftSideBoxInProductDetailsPage && Model.HasGuarantee)
+                                        {
+                                            <li>
+                                                <div class="vp-title vp-guarantee">
+                                                    <i class="fal fa-shield-check"></i>
+                                                    &nbsp;@T("ProductDetails.ProductAttribute.Guarantee"):
+                                                </div>
+                                                <div class="vp-value">@Model.GuaranteeDefaultName</div>
+                                            </li>
+                                        }
+                                        @if (Model.ShowDeliveryInfoInProductDetailsPage && Model.IsShipEnabled && (!string.IsNullOrWhiteSpace(Model.DeliveryDate) || Model.StockAvailabilityStatus))
+                                        {
+                                            @await Html.PartialAsync("_DeliveryInfo", Model)
+                                        }
+                                        @if (Model.ShowProductWarehouseNameInProductDetailsPage && !string.IsNullOrWhiteSpace(Model.WarehouseName))
+                                        {
+                                            <li>
+                                                <div class="vp-title">
+                                                    <i class="fal fa-warehouse"></i>
+                                                    @T("ProductDetails.Warehouse"):
+                                                </div>
+                                                <div class="vp-value">@Model.WarehouseName</div>
+                                            </li>
+                                        }
+                                    </ul>
+                                    }
+                                }
+
+                            @if(Model.IsDesktopDevice){
+                                 <div class="current-price-gold current-price-gold-desk">
+                                                <span class="text">قیمت لحظه ای یک گرم طلای 18 عیار:</span>
+                                                <span class="value"><span class="price online-price-gold-desktop"></span>تومان</span>
+                                            </div>
+                            }
+                            <div class="product-preparation product-preparation-desk">
+                                @if(Model.AddToCart.AvailableForPreOrder && Model.IsDesktopDevice){
+                                    <div class="item-preparation">
+                                                    <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/clock.svg" alt="">
+                                                    <span class="text">زمان آماده سازی محصول: </span>
+                                                    <span class="time">
+                                                        <span class="time-main-preperation"></span>
+                                                        <span>روزکاری</span>
+                                                    </span>
+                                                </div>
+                                }
+                                @if (Model.AddToCart.AvailableForPreOrder && Model.IsDesktopDevice)
+                                {
+                                    <div class="item">
+                                        <div class="icon">
+                                            <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/alert.svg" alt="">
+                                        </div>
+                                        <span class="text">وزن نهایی پس از ساخت کامل محصول مشخص خواهد
+                                            شد.</span>
+                                    </div>
+                                }
+                                @if (Model.AddToCart.AvailableForPreOrder && Model.IsDesktopDevice)
+                                {
+                                    <div class="item">
+                                        <div class="icon">
+                                            <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/alert.svg" alt="">
+                                        </div>
+                                        <span class="text">قیمت نهایی محصول بر حسب قیمت لحظه ای زمان ثبت
+                                            سفارش
+                                            محصول
+                                            لحاظ میگردد و نوسانات قیمتی
+                                            تاثیری در قیمت نهایی نخواهد داشت.</span>
+                                    </div>
+                                }
+                                <div class="product-preparation-bottom">
+                                    @if(Model.AddToCart.AvailableForPreOrder && Model.IsDesktopDevice){
+                                                    <div class="preorder-price">
+                                                        <div class="text">پیش پرداخت:</div>
+                                                        <div class="value">
+                                                            <span class="main-value preorder-price-value"></span>
+                                                            <span class="text-value">
+                                                                تومان
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                }
+                                    @if(Model.IsDesktopDevice){
+                                        <div class="weight-summary-pay">
+                                            <div class="name">وزن</div>
+                                            <div class="value">
+                                                <div class="weight-summary"></div>
+                                                <span class="text-value">گرم</span>
+                                            </div>
+                                        </div>
+                                        <div class="profit-summary-pay">
+                                            <div class="name">اجرت</div>
+                                            <div class="value ">
+                                                <div class="profit-summary"></div>
+                                                <span class="text-value">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="end-price">
+                                                        <div class="price-icon">
+                                                            <span class="icon">
+                                                                <img src="/Plugins/Widgets.B2CGold/wwwroot/assets/img/dollar-circle.svg" />
+                                                            </span>
+                                                            <span>
+                                                                قیمت نهایی :
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                    }              
+                                    @if (!Model.IsMobileDevice)
+                                {
+                                    dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";
+                                    
+                                        @if (!Model.DisableBuyButton && !Model.AddToCart.CallForPrice && !Model.AddToCart.CustomerEntersPrice)
+                                        {
+                                            <div class="justDesktop">
+                                                <div class="d-flex flex-y-center priceParent">
+                                                    @{
+                                                        <input  type="hidden" value="" id=""/>
+                                                        
+                                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = $"price_{Model.Id}";
+                                                        @await Html.PartialAsync("_ProductPrice", Model.ProductPrice, dataDictPrice)
+                                                    }
+                                                </div>
+                                                @if (Model.DisplayStockQuantity)
+                                                {
+                                                    if (Model.ManageInventoryMethod == Nop.Core.Domain.Catalog.ManageInventoryMethod.ManageStock)
+                                                    {
+                                                        <div class="product_inventory m-b-16">
+                                                            @if (Model.ManageInventoryMethod == Nop.Core.Domain.Catalog.ManageInventoryMethod.ManageStock)
+                                                            {
+                                                                <i class="fal fa-exclamation-circle"></i>
+                                                                @Model.StockAvailability
+                                                            }
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+
+                                        <div class="d-flex flex-y-center flex-x-between relative">
+                                            @await Html.PartialAsync("_AddToCart", Model, dataDictAddToCart)
+                                        </div>
+                                }
+                                </div>
+                                </div>
+                                    @if (Model.IsMobileDevice)
+                                {
+                                    <div class="justMobileTablet">
+                                        <div class="bottom-fix-pdp-mobile">
+                                            @{
+                                                dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = $"addtocart_{Model.Id}";
+                                                @await Html.PartialAsync("_AddToCart", Model, dataDictAddToCart)
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                 @if (Model.ShowHelpBoxInProductDetailsPage && !Model.IsMobileDevice)
+                                {
+                                    <div class="km-product-selected-details justDesktop">
+                                        <div class="customerBox">
+                                            <div class="first">
+                                                <div>
+                                                    <div>
+                                                        <div class="title">@T("ProductDetails.HelpBox.NeedHelpTitle")</div>
+                                                        <div class="description">@T("ProductDetails.HelpBox.NeedHelpDescription")</div>
+                                                    </div>
+                                                    <div class="d-flex flex-x-spaceBetween flex-y-center titles">
+                                                        <div class="title">@T("ProductDetails.HelpBox.CallTitle")</div>
+                                                        <div class="title title2">
+                                                            <a target="_blank" href="@(!string.IsNullOrWhiteSpace(Model.ProductDetailsHelpBoxPhoneNumberLink) ? Model.ProductDetailsHelpBoxPhoneNumberLink : $"tel:{Model.ProductDetailsHelpBoxPhoneNumber}")">@Model.ProductDetailsHelpBoxPhoneNumber</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                        </div>
+                    </div>
+                    @if (Model.DisplayProductTagsInProductDetailsPage && Model.IsMobileDevice && Model.ProductTags != null && Model.ProductTags.Count > 0)
+                    {
+                        <div class="justMobileTablet km-product-more-details">
+                            <div>
+                                <div class="titleSelect m-b-16">
+                                    <span>
+                                        @T("NopLine.pdp.ProductTags")
+                                    </span>
+                                </div>
+                                <ul class="RelatedTagItem scrollMode">
+                                    @foreach (var productTag in Model.ProductTags)
+                                    {
+                                        <li class="tagItem tag tag--bg-base-light">
+                                            <a href="@(!string.IsNullOrWhiteSpace(productTag.ProductTagRelativeUrl) ? productTag.ProductTagRelativeUrl : "javascript:void(0)")">
+                                                <span>
+                                                    @productTag.Name
+                                                </span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.ProductAttributes.Any() && Model.IsMobileDevice && !Model.DisableBuyButton)
+                    {
+                        <div class="justMobileTablet km-product-more-details m-t-16">
+                            <div class="m-b-16 after-clear ">
+                                @if (!Model.AddToCart.CustomerEntersPrice)
+                                {
+                                    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = $"attributes_{Model.Id}";
+                                    @await Html.PartialAsync("_ProductAttributes", Model, dataDictAttributes)
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+
+    @if (Model.MarkAsNew)
+    {
+        <div class="km-prices-new-theme">
+            @T("New")
+        </div>
+    }
+</section>
+
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsOverviewBottom, additionalData = Model })
+
+@if (Model.TierPrices.Count() > 0)
+{
+    <div class="km-product-page-prices km-box-style p-24 after-clear">
+        <div class="d-flex m-b-16">
+            <img src="/lib/themes/ryan/assets/img/icons/price-tag.svg" alt="price tag image" class="m-t-2 height-30" />
+            <div class="m-r-8">
+                <div class="fontSize-20 fontWeight-700 colorGray">@T("ProductDetails.TierPricesTable")</div>
+                <div class="fontSize-16 colorGray-979797">@T("ProductDetails.TierPricesTable.Description")</div>
+            </div>
+        </div>
+        <div class="tableNew">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-6">
+                            @if (string.IsNullOrWhiteSpace(productBasepriceUnitName))
+                            {
+                                <text>@T("Products.Qty")</text>
+                            }
+                            else
+                            {
+                                <text>@T("Products.QtyAmount")</text>
+                            }
+                        </th>
+                        <th class="col-6">
+                            @if (string.IsNullOrWhiteSpace(productBasepriceUnitName))
+                            {
+                                <text>@T("tireprice.thepriceofeachnumber")</text>
+                            }
+                            else
+                            {
+                                <text>@T("tireprice.thepriceofeachnumberamount", productBasepriceUnitName)</text>
+                            }
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TierPrices)
+                    {
+                        <tr>
+                            <td>@T("ProductDetails.TierPricesTable.UpperPurchaseQuantity", $"{item.Quantity} {productBasepriceUnitName}".Trim())</td>
+                            <td>@item.Price @workContext.WorkingCurrency.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+@await Component.InvokeAsync("SimilarProducts", new { productId = Model.Id })
+@await Component.InvokeAsync("Widget", new { widgetZone = "AdvancedSimilarProducts", additionalData = Model })
+<div>
+        @if (Model.DisplayProductTagsInProductDetailsPage && !Model.DisplayProductTagsInTopSection && !Model.IsMobileDevice && Model.ProductTags != null && Model.ProductTags.Count > 0)
+        {
+            <style>
+                /* style title */
+                .more-feature .km-title {
+                    font-size: 18px !important;
+                    font-weight: 700 !important;
+                    margin-bottom: 12px !important;
+                    color: #5e5e5e !important;
+                }
+
+                .tagItem.tag.tag--bg-base-light span {
+                    display: inline-block;
+                    border-bottom: 1px dashed #eb3a3a;
+                    line-height: 1;
+                    white-space: nowrap;
+                }
+
+                /* style bg and margin for tag */
+                .RelatedTagItem-w100 .tag--bg-base-light {
+                    color: #eb3a3a !important;
+                    margin: 5px 0;
+                    background: rgba(235, 58, 58, 0.1) !important;
+                    font-size: 14px;
+                    margin-top: 12px;
+                    margin-left: 12px;
+                }
+            </style>
+
+
+            <div class="km-product-more-details after-clear  m-b-32 bg-white radius-16">
+                <div class="more-feature p-24">
+                    <div class="km-title p-b-8">
+                        @T("NopLine.pdp.ProductTags")
+                    </div>
+                    <ul class="RelatedTagItem RelatedTagItem-w100">
+                        @foreach (var productTag in Model.ProductTags)
+                        {
+                            <li class="tagItem tag tag--bg-base-light">
+                                <a href="@(!string.IsNullOrWhiteSpace(productTag.ProductTagRelativeUrl) ? productTag.ProductTagRelativeUrl : "javascript:void(0)")">
+                                    <span>
+                                        @productTag.Name
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        }
+        
+    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBeforeCollateral, additionalData = Model })
+
+</div>
+
+@if (Model.IsMobileDevice)
+{
+    <div class="product-details-gold">
+    <div class="product-id">
+    <div class="id">
+        <span class="text">شناسه کالا:</span>
+        <span class="value">@Model.Sku</span>
+         </div>
+            <a class="guid-size">
+                <span>راهنمای سایزبندی</span>
+                <i class="fal fa-angle-left"></i>
+            </a>
+        </div>
+        <div class="current-price-gold">
+            <span class="text">قیمت لحظه ای یک گرم طلای 18 عیار:</span>
+            <span class="value"><span class="price price-online-gold-mobile"></span>تومان</span>
+        </div>
+
+        @if (Model.AddToCart.AvailableForPreOrder)
+        {
+            @await Component.InvokeAsync("ProductMobilePreOrder", Model)
+        }
+
+    </div>
+        @await Html.PartialAsync("/Plugins/Widgets.B2CGold/Views/Shared/_PreOrderMobileDetails.cshtml" ,Model)
+        <div class="product-details-gold pt-0">
+            @await Html.PartialAsync("/Plugins/Widgets.B2CGold/Views/Shared/_B2CPayingList.cshtml" ,Model)
+            @await Component.InvokeAsync("ProductGoldBelonging", Model)
+            @await Component.InvokeAsync("ProductGoldIngredient", Model)
+        </div>
+    @await Component.InvokeAsync("B2CGoldGoldProposalValue")
+    @await Component.InvokeAsync("B2CGoldGoldContactInfo")
+    @await Html.PartialAsync("/Plugins/Widgets.B2CGold/Views/Shared/_FormulaPriceGold.cshtml")
+}
+
+@if (Model.IsDesktopDevice)
+{
+    <div class="col-9 accordions-desktop">
+        <div class="product-details-gold pt-0">
+            @if (Model.AddToCart.AvailableForPreOrder)
+            {
+                @await Component.InvokeAsync("ProductMobilePreOrder", Model)
+            }
+            @await Html.PartialAsync("/Plugins/Widgets.B2CGold/Views/Shared/_B2CPayingList.cshtml" ,Model)
+            @await Component.InvokeAsync("ProductGoldBelonging", Model)
+            @await Component.InvokeAsync("ProductGoldIngredient", Model)
+        </div>
+        @await Component.InvokeAsync("B2CGoldGoldProposalValue")
+        @await Component.InvokeAsync("B2CGoldGoldContactInfo")
+        @await Html.PartialAsync("/Plugins/Widgets.B2CGold/Views/Shared/_FormulaPriceGold.cshtml")
+    </div>
+}
+
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsEssentialBottom, additionalData = Model })
+@await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
+@await Component.InvokeAsync("ProductsAlsoPurchased", new { productId = Model.Id })
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ProductDetailsBottom, additionalData = Model })
+
+@if (Model.CustomerCanLeaveComment)
+{
+    <section class="km-lightbox" km-app="theme" km-controller="lightbox" km-action="lightbox" km-id="comment-add">
+        <div class="km-lightbox-container fixHeader-padding add-opinion vp-lightbox-border">
+            <div class="km-lightbox-header fixHeader-overPage">
+                <div class="km-title">@T("AddNewComment")</div>
+                <div class="km-close" km-app="theme" km-controller="lightbox" km-action="close" km-id="comment-add">
+                    <i class="fal fa-times"></i>
+                </div>
+            </div>
+            <div class="km-lightbox-content">
+                <div class="km-form-style km-theme-1 after-clear km-product-comment-from-f">
+                    <form action="" method="post" id="kmProductCommentAddForm">
+                        @if (Model.IsMobileDevice &&
+                       Model.DefaultPictureModel != null &&
+                       !string.IsNullOrWhiteSpace(Model.DefaultPictureModel.ImageUrl))
+                        {
+                            <div class="justMobileTablet">
+                                <div class="product-box-comment">
+                                    <div class="photo">
+                                        <img alt="@Model.Name" src="@Model.DefaultPictureModel.ImageUrl">
+                                    </div>
+                                    <div class="description">
+                                        <span class="title colorGray-2f2f2f fontSize-14 fontWeight-700">
+                                            @Model.Name
+                                        </span>
+                                        <span class="desc colorGray-5e5e5e fontSize-12 m-t-8">
+                                            @Model.OfficialName
+                                        </span>
+                                        <div class="container-stars d-flex flex-y-center">
+                                            <div class="stars" style="--rating: @(Model.ProductReviewOverview.AvgReview.ToString().Replace("/", "."));"></div>
+                                            @{
+                                                string resultRatingText = "";
+                                                switch (Model.ProductReviewOverview.AvgReview)
+                                                {
+                                                    case double n when (n > 4 && n <= 5):
+                                                        resultRatingText = T("NopLine.ProductComment.Rating.Excellent").Text;
+                                                        break;
+                                                    case double n when (n > 3 && n <= 4):
+                                                        resultRatingText = T("NopLine.ProductComment.Rating.Good").Text;
+                                                        break;
+                                                    case double n when (n > 2 && n <= 3):
+                                                        resultRatingText = T("NopLine.ProductComment.Rating.Medium").Text;
+                                                        break;
+                                                    case double n when (n > 1 && n <= 2):
+                                                        resultRatingText = T("NopLine.ProductComment.Rating.Unsuitable").Text;
+                                                        break;
+                                                    case double n when (n > 0 && n <= 1):
+                                                        resultRatingText = T("NopLine.ProductComment.Rating.Bad").Text;
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                            }
+                                            <span class="colorGray-5e5e5e fontSize-14 m-r-8">@resultRatingText</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="km-row km-three-quarters">
+                            <div class="vp-row-container">
+                                <label class="km-label" for="txtProductCommentAddName">
+                                    @T("NopLine.AddComment.CommentTitle")
+                                    <span class="km-required">*</span>
+                                </label>
+                                <div class="vp-form-rating">
+                                    <div class="vp-rating-fieldset">
+                                        <input name="AddProductReview.Rating" type="radio" id="FirstCustomRatingName" value="1" />
+                                        <label for="FirstCustomRatingName" title="@T("NopLine.ProductComment.Rating.Bad")">
+                                            <svg version="1.1" width="512"
+                                                 height="512" x="0" y="0" viewBox="0 0 511.98685 511"
+                                                 xml:space="preserve"
+                                                 class=""><g><path d="m510.652344 185.902344c-3.351563-10.367188-12.546875-17.730469-23.425782-18.710938l-147.773437-13.417968-58.433594-136.769532c-4.308593-10.023437-14.121093-16.511718-25.023437-16.511718s-20.714844 6.488281-25.023438 16.535156l-58.433594 136.746094-147.796874 13.417968c-10.859376 1.003906-20.03125 8.34375-23.402344 18.710938-3.371094 10.367187-.257813 21.738281 7.957031 28.90625l111.699219 97.960937-32.9375 145.089844c-2.410156 10.667969 1.730468 21.695313 10.582031 28.09375 4.757813 3.4375 10.324219 5.1875 15.9375 5.1875 4.839844 0 9.640625-1.304687 13.949219-3.882813l127.46875-76.183593 127.421875 76.183593c9.324219 5.609376 21.078125 5.097657 29.910156-1.304687 8.855469-6.417969 12.992187-17.449219 10.582031-28.09375l-32.9375-145.089844 111.699219-97.941406c8.214844-7.1875 11.351563-18.539063 7.980469-28.925781zm0 0" fill="#e5e5e5" data-original="#ffc107" style="" class="star-svg" /></g></svg>
+                                        </label>
+                                        <input name="AddProductReview.Rating" type="radio" id="SecondCustomRatingName" value="2" />
+                                        <label for="SecondCustomRatingName" title="@T("NopLine.ProductComment.Rating.Unsuitable")">
+                                            <svg version="1.1" width="512"
+                                                 height="512" x="0" y="0" viewBox="0 0 511.98685 511"
+                                                 xml:space="preserve"
+                                                 class=""><g><path d="m510.652344 185.902344c-3.351563-10.367188-12.546875-17.730469-23.425782-18.710938l-147.773437-13.417968-58.433594-136.769532c-4.308593-10.023437-14.121093-16.511718-25.023437-16.511718s-20.714844 6.488281-25.023438 16.535156l-58.433594 136.746094-147.796874 13.417968c-10.859376 1.003906-20.03125 8.34375-23.402344 18.710938-3.371094 10.367187-.257813 21.738281 7.957031 28.90625l111.699219 97.960937-32.9375 145.089844c-2.410156 10.667969 1.730468 21.695313 10.582031 28.09375 4.757813 3.4375 10.324219 5.1875 15.9375 5.1875 4.839844 0 9.640625-1.304687 13.949219-3.882813l127.46875-76.183593 127.421875 76.183593c9.324219 5.609376 21.078125 5.097657 29.910156-1.304687 8.855469-6.417969 12.992187-17.449219 10.582031-28.09375l-32.9375-145.089844 111.699219-97.941406c8.214844-7.1875 11.351563-18.539063 7.980469-28.925781zm0 0" fill="#e5e5e5" data-original="#ffc107" style="" class="star-svg" /></g></svg>
+                                        </label>
+                                        <input name="AddProductReview.Rating" type="radio" id="ThirdCustomRatingName" value="3" />
+                                        <label for="ThirdCustomRatingName" title="@T("NopLine.ProductComment.Rating.Medium")">
+                                            <svg version="1.1" width="512"
+                                                 height="512" x="0" y="0" viewBox="0 0 511.98685 511"
+                                                 xml:space="preserve"
+                                                 class=""><g><path d="m510.652344 185.902344c-3.351563-10.367188-12.546875-17.730469-23.425782-18.710938l-147.773437-13.417968-58.433594-136.769532c-4.308593-10.023437-14.121093-16.511718-25.023437-16.511718s-20.714844 6.488281-25.023438 16.535156l-58.433594 136.746094-147.796874 13.417968c-10.859376 1.003906-20.03125 8.34375-23.402344 18.710938-3.371094 10.367187-.257813 21.738281 7.957031 28.90625l111.699219 97.960937-32.9375 145.089844c-2.410156 10.667969 1.730468 21.695313 10.582031 28.09375 4.757813 3.4375 10.324219 5.1875 15.9375 5.1875 4.839844 0 9.640625-1.304687 13.949219-3.882813l127.46875-76.183593 127.421875 76.183593c9.324219 5.609376 21.078125 5.097657 29.910156-1.304687 8.855469-6.417969 12.992187-17.449219 10.582031-28.09375l-32.9375-145.089844 111.699219-97.941406c8.214844-7.1875 11.351563-18.539063 7.980469-28.925781zm0 0" fill="#e5e5e5" data-original="#ffc107" style="" class="star-svg" /></g></svg>
+                                        </label>
+                                        <input name="AddProductReview.Rating" type="radio" id="FourthCustomRatingName" value="4" />
+                                        <label for="FourthCustomRatingName" title="@T("NopLine.ProductComment.Rating.Good")">
+                                            <svg version="1.1" width="512"
+                                                 height="512" x="0" y="0" viewBox="0 0 511.98685 511"
+                                                 xml:space="preserve"
+                                                 class=""><g><path d="m510.652344 185.902344c-3.351563-10.367188-12.546875-17.730469-23.425782-18.710938l-147.773437-13.417968-58.433594-136.769532c-4.308593-10.023437-14.121093-16.511718-25.023437-16.511718s-20.714844 6.488281-25.023438 16.535156l-58.433594 136.746094-147.796874 13.417968c-10.859376 1.003906-20.03125 8.34375-23.402344 18.710938-3.371094 10.367187-.257813 21.738281 7.957031 28.90625l111.699219 97.960937-32.9375 145.089844c-2.410156 10.667969 1.730468 21.695313 10.582031 28.09375 4.757813 3.4375 10.324219 5.1875 15.9375 5.1875 4.839844 0 9.640625-1.304687 13.949219-3.882813l127.46875-76.183593 127.421875 76.183593c9.324219 5.609376 21.078125 5.097657 29.910156-1.304687 8.855469-6.417969 12.992187-17.449219 10.582031-28.09375l-32.9375-145.089844 111.699219-97.941406c8.214844-7.1875 11.351563-18.539063 7.980469-28.925781zm0 0" fill="#e5e5e5" data-original="#ffc107" style="" class="star-svg" /></g></svg>
+                                        </label>
+                                        <input name="AddProductReview.Rating" type="radio" id="FifthCustomRatingName" value="5" checked="checked" />
+                                        <label for="FifthCustomRatingName" title="@T("NopLine.ProductComment.Rating.Excellent")">
+                                            <svg version="1.1" width="512"
+                                                 height="512" x="0" y="0" viewBox="0 0 511.98685 511"
+                                                 xml:space="preserve"
+                                                 class=""><g><path d="m510.652344 185.902344c-3.351563-10.367188-12.546875-17.730469-23.425782-18.710938l-147.773437-13.417968-58.433594-136.769532c-4.308593-10.023437-14.121093-16.511718-25.023437-16.511718s-20.714844 6.488281-25.023438 16.535156l-58.433594 136.746094-147.796874 13.417968c-10.859376 1.003906-20.03125 8.34375-23.402344 18.710938-3.371094 10.367187-.257813 21.738281 7.957031 28.90625l111.699219 97.960937-32.9375 145.089844c-2.410156 10.667969 1.730468 21.695313 10.582031 28.09375 4.757813 3.4375 10.324219 5.1875 15.9375 5.1875 4.839844 0 9.640625-1.304687 13.949219-3.882813l127.46875-76.183593 127.421875 76.183593c9.324219 5.609376 21.078125 5.097657 29.910156-1.304687 8.855469-6.417969 12.992187-17.449219 10.582031-28.09375l-32.9375-145.089844 111.699219-97.941406c8.214844-7.1875 11.351563-18.539063 7.980469-28.925781zm0 0" fill="#e5e5e5" data-original="#ffc107" style="" class="star-svg" /></g></svg>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="text" name="AddProductReview.Title" value="" id="txtProductCommentAddName">
+                        </div>
+                        <div class="km-row">
+                            <label class="km-label" for="txtProductCommentAddDescription">
+                                @T("ProductDetails.ProductReviews.YourOpinion")
+                                <span class="km-required">*</span>
+                            </label>
+                            <textarea name="AddProductReview.ReviewText" id="txtProductCommentAddDescription" required></textarea>
+                        </div>
+                        <div class="km-row km-btns d-flex flex-y-center flex-x-spaceBetween">
+                            <span class="right m-l-16" style="text-align: justify"> @T("NopLine.AddComment.AgreementRules", Model.CurrentStoreName)</span>
+                            @if (Model.IsMobileDevice)
+                            {
+                                <div class="add-comment-btn justMobileTablet">
+                                    <button type="submit" class="km-btn km-color1 km-theme-3" id="kmProductCommentAddBtn">
+                                        @T("NopLine.SubmitComment")
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <button type="submit" class="km-btn km-color1 km-theme-3" id="kmProductCommentAddBtn">
+                                    @T("NopLine.SubmitComment")
+                                </button>
+                            }
+                        </div>
+                        <input type="hidden" name="productId" value="@Model.Id">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<section class="vp-lightbox" vp-id="productGallery" @(Model.IsMobileDevice ? "style=display:none" : string.Empty)>
+    <div class="vp-lightbox-container">
+        <div class="vp-lightbox-header">
+            <div class="vp-lightbox-title">@T("ViraProcess.Plp.Gallery")</div>
+            <div class="vp-lightbox-close">
+                <i class="fal fa-times"></i>
+            </div>
+        </div>
+        <div class="vp-lightbox-content">
+            <div class="vp-gallery-lightbox"></div>
+        </div>
+    </div>
+</section>
+
+<section class="km-lightbox km-lightbox-notif-available" km-app="theme" km-controller="lightbox" km-action="lightbox" km-id="notifIfAvailable">
+    <div class="km-lightbox-container">
+        <div class="km-lightbox-header">
+            <div class="km-title">
+                <span class="km-description"> @T("ProductDetails.InventorySubscribe.Availability")</span>
+            </div>
+            <div class="km-close" km-app="theme" km-controller="lightbox" km-action="close" km-id="notifIfAvailable">
+                <i class="fal fa-times"></i>
+            </div>
+        </div>
+        <div class="km-lightbox-content after-clear">
+            <form action="" method="post" id="km-form-notif-available">
+                <div class="km-form-style km-theme-1">
+                    <div class="km-row">
+                        <label class="km-label">@T("ViraProcess.Sharing.ViaHeaderTitle"):</label>
+                    </div>
+                    <div class="km-row">
+                        <ul class="km-lightbox-notif-available">
+                            <li>
+                                <div class="brands-category item-filter pretty p-svg p-curve">
+                                    <input type="checkbox" name="sendEmail" value="false" friendly-value="@T("ViraProcess.Sharing.ViaEmail")" checked>
+                                    <div class="state p-primary">
+                                        <img src="/lib/themes/ryan/assets/img/icons/spec-filter-check-box-1.svg" class="svg svg-icon" alt="check box icon for @T("ViraProcess.Sharing.ViaEmail")">
+                                        <label>
+                                            <span>@T("ViraProcess.Sharing.ViaEmail")</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="brands-category item-filter pretty p-svg p-curve">
+                                    <input type="checkbox" name="sendSms" value="false" friendly-value="@T("ViraProcess.Sharing.ViaSms")">
+                                    <div class="state p-primary">
+                                        <img src="/lib/themes/ryan/assets/img/icons/spec-filter-check-box-1.svg" class="svg svg-icon" alt="check box icon for @T("ViraProcess.Sharing.ViaSms")">
+                                        <label>
+                                            <span>@T("ViraProcess.Sharing.ViaSms")</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="km-row km-btns" style="margin-bottom: 0">
+                        <button type="submit" class="km-btn km-theme-3 km-color1 width-30">ثبت</button>
+                    </div>
+                </div>
+                <input name="productId" value="@Model.Id" type="hidden" />
+            </form>
+        </div>
+    </div>
+</section>
+
+@await Html.PartialAsync("_ShareButton", Model)
+
+@if (Model.ProductReviewOverview.AllowCustomerReviews)
+{
+    <section class="km-lightbox" km-action="lightbox" km-app="theme" km-controller="lightbox" km-id="comment-user">
+        <div class="km-lightbox-container fixHeader-padding vp-lightbox-border" style="padding-top: 56px">
+            <div class="km-lightbox-header fixHeader-overPage">
+                <div class="km-title">
+                    @T("Customers.Comments")
+                    <span>( @Model.ProductReviewOverview.TotalReviews )</span>
+                </div>
+                <div class="km-close" km-action="close" km-app="theme" km-controller="lightbox" km-id="comment-user">
+                    <i class="fal fa-times"></i>
+                </div>
+            </div>
+            <div class="km-lightbox-content noPadding">
+                <div class="user-rating">
+                    <div class="content">
+                        <div class="rating-container">
+                            <div class="total-score">
+                                <div class="rating-number">
+                                    <div class="rating-main">@(Model.ProductReviewOverview.AvgReview > 0 ? Model.ProductReviewOverview.AvgReview.ToString().Replace("/", ".") : "0")</div>
+                                    <div class="rating-desc">@T("ViraProcess.ProductReview.FromBaseNumber") 5</div>
+                                </div>
+                                <div class="stars" style="--rating: @(Model.ProductReviewOverview.AvgReview > 0 ? Model.ProductReviewOverview.AvgReview.ToString().Replace("/", ".") : "0");"></div>
+                            </div>
+                            <div class="rating-line">
+                                <div class="line">
+                                    <span class="rating-text">@T("NopLine.ProductComment.Rating.Excellent")</span>
+                                    <div class="content-rating">
+                                        <div class="rating">
+                                            <div class="rate-value" style="width: calc(@((Model.ProductReviewOverview.FifthCustomRatingRatio * 100).ToString().Replace("/", "."))%)"></div>
+                                        </div>
+                                        <div class="total-comment">
+                                            @Model.ProductReviewOverview.FifthCustomRating
+                                            <span>(@(Model.ProductReviewOverview.FifthCustomRatingRatio * 100)<span class="fontSize-10">%</span>)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="line">
+                                    <span class="rating-text">@T("NopLine.ProductComment.Rating.Good")</span>
+                                    <div class="content-rating">
+                                        <div class="rating">
+                                            <div class="rate-value" style="width: calc(@((Model.ProductReviewOverview.FourthCustomRatingRatio * 100).ToString().Replace("/", "."))%)"></div>
+                                        </div>
+                                        <div class="total-comment">
+                                            @Model.ProductReviewOverview.FourthCustomRating
+                                            <span>(@(Model.ProductReviewOverview.FourthCustomRatingRatio * 100)<span class="fontSize-10">%</span>)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="line">
+                                    <span class="rating-text">@T("NopLine.ProductComment.Rating.Medium")</span>
+                                    <div class="content-rating">
+                                        <div class="rating">
+                                            <div class="rate-value" style="width: calc(@((Model.ProductReviewOverview.ThirdCustomRatingRatio * 100).ToString().Replace("/", "."))%)"></div>
+                                        </div>
+                                        <div class="total-comment">
+                                            @Model.ProductReviewOverview.ThirdCustomRating
+                                            <span>(@(Model.ProductReviewOverview.ThirdCustomRatingRatio * 100)<span class="fontSize-10">%</span>)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="line">
+                                    <span class="rating-text">@T("NopLine.ProductComment.Rating.Unsuitable")</span>
+                                    <div class="content-rating">
+                                        <div class="rating">
+                                            <div class="rate-value" style="width: calc(@((Model.ProductReviewOverview.SecondCustomRatingRatio * 100).ToString().Replace("/", "."))%)"></div>
+                                        </div>
+                                        <div class="total-comment">
+                                            @Model.ProductReviewOverview.SecondCustomRating
+                                            <span>(@(Model.ProductReviewOverview.SecondCustomRatingRatio * 100)<span class="fontSize-10">%</span>)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="line">
+                                    <span class="rating-text">@T("NopLine.ProductComment.Rating.Bad")</span>
+                                    <div class="content-rating">
+                                        <div class="rating">
+                                            <div class="rate-value" style="width: calc(@((Model.ProductReviewOverview.FirstCustomRatingRatio * 100).ToString().Replace("/", "."))%)"></div>
+                                        </div>
+                                        <div class="total-comment">
+                                            @Model.ProductReviewOverview.FirstCustomRating
+                                            <span>(@(Model.ProductReviewOverview.FirstCustomRatingRatio * 100)<span class="fontSize-10">%</span>)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="comments-user backgroundGray-e5e5e5 p-b-46">
+                    @await Component.InvokeAsync("CommentLightbox", new { productId = Model.Id });
+                </div>
+                <div class="add-comment-btn">
+                    @if (Model.IsCustomerAuthenticated && Model.CustomerCanLeaveComment)
+                    {
+                        <div class="add-comment-button" km-action="open" km-app="theme" km-controller="lightbox"
+                             km-id="comment-add">
+                            <div class="add-comment">
+                                <i class="fal fa-plus"></i>
+                                <span>@T("reviews.overview.addnew")</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="km-product-comment-form-top after-clear justMobileTablet">
+                            <div class=" km-product-comment-need-login">
+                                <div class="loginForComment" style="display: flex; justify-content: flex-end">
+                                    <a class="km-btn km-theme-2 km-inline colorBase fontWeight-700"
+                                       href="#">
+                                        <i class="fal fa-comment-plus"></i>
+                                        @T("NopLine.LoginToYourAccountToAddComments")
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@if (Model.IsMobileDevice)
+{
+    <script asp-location="Footer">
+        isPdpMobile = true;
+    </script>
+}
+else
+{
+    <script asp-location="Footer">
+        $(function () {
+            vp.plugins['ProductPage'].init();
+        });
+
+        $(document).ready(setTimeout(function () {
+            $(".km-text-summarizer-content").removeAttr("style");
+        }, 100));
+    </script>
+}
+

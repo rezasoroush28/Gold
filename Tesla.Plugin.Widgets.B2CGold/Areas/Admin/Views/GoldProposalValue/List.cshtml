@@ -1,0 +1,59 @@
+@model GoldProposalValueSearchModel
+
+@{
+    //page title
+    ViewBag.Title = T("Plugins.Widgets.B2CGold.GoldProposalValue").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Widgets.B2CGold.GoldProposalValue");
+}
+
+<nop-antiforgery-token />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Plugins.Widgets.B2CGold.GoldProposalValue")
+    </h1>
+    <div class="pull-right">
+        <a asp-action="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                    Name = "goldProposalValue-grid",
+                    UrlRead = new DataUrl("List", "GoldProposalValue", null),
+                    UrlDelete=new DataUrl("Delete","GoldProposalValue",null),
+                    Length = Model.PageSize,
+                    LengthMenu = Model.AvailablePageSizes,
+                    ColumnCollection = new List<ColumnProperty>
+                    {
+                    new ColumnProperty(nameof(GoldProposalValueModel.ValueTitle))
+                    {
+                    Title = T("Plugins.Widgets.B2CGold.GoldProposalValue.ValueTitle").Text,
+                    Width = "300"
+                    },
+                    new ColumnProperty(nameof(GoldProposalValueModel.ValueDescription))
+                    {
+                    Title = T("Plugins.Widgets.B2CGold.GoldProposalValue.ValueDescription").Text
+                    },
+                    new ColumnProperty(nameof(GoldProposalValueModel.Id))
+                    {
+                    Title = T("Admin.Common.Edit").Text,
+                    Width = "100",
+                    ClassName =  NopColumnClassDefaults.Button,
+                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                    }
+                    }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

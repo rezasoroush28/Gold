@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Business2Customer Gold Widget",
+  "SystemName": "Widgets.B2CGold",
+  "Version": "1.0",
+  "SupportedVersions": [ "4.20" ],
+  "Author": "TeslaCommerce.ir",
+  "DisplayOrder": 1,
+  "FileName": "Tesla.Plugin.Widgets.B2CGold.dll",
+  "Description": "Gold"
+}

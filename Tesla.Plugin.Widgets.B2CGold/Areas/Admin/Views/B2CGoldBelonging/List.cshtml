@@ -1,0 +1,112 @@
+﻿@{
+    Html.SetActiveMenuItemSystemName("Widgets.B2CGold.GoldBelonging");
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Widgets.B2CGold.Admin.MangeBelonging.Title")
+    </h1>
+    <div class="pull-right">
+
+        <a href="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+
+    </div>
+</div>
+
+<nop-antiforgery-token />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="Gold-Belonging-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#Gold-Belonging-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "GoldBelonging"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { editable: false, type: "number" },
+                            Name: { editable: false, type: "string" },
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "create" || e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            scrollable: false,
+            columns: [{
+                field: "Name",
+                title: "@T("Admin.Configuration.B2CGoldBelongin.Name")",
+                width: 200,
+            },  {
+                field: "edit",
+                title: "ویرایش",
+                template: kendo.template($("#edit-template").html()),
+                width: 50,
+                filterable: false,
+                sortable: false
+            }, {
+                field: "delete",
+                title: "حذف",
+                template: kendo.template($("#delete-template").html()),
+                width: 50,
+                filterable: false,
+                sortable: false
+            }]
+        });
+    });
+</script>
+
+<script id="edit-template" type="text/x-kendo-template">
+    <a class="k-button" href="Edit?id=#: Id#">
+        <span class="k-icon k-update"></span> @T("Admin.Common.Edit")
+    </a>
+</script>
+
+<script id="delete-template" type="text/x-kendo-template">
+    <a class="k-button" href="Delete?id=#: Id#">
+        <span class="k-icon k-delete"></span> @T("Admin.Common.Delete")
+    </a>
+</script>

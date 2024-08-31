@@ -1,0 +1,105 @@
+﻿@model GoldBelongingPayingAdminModel
+
+@{
+    Layout = null;
+}
+<nop-antiforgery-token />
+<div class="form-horizontal">
+    <div class="panel-body">
+        <div class="panel">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        نوع محاسبه قیمت متعلقات:
+                    </div>
+                    <div class="col-md-5" id="dataDisplay">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="GoldBelongingCalculationTypeId" />
+                    </div>
+                    <div class="col-md-5">
+                        <nop-select asp-for="GoldBelongingCalculationTypeId" asp-items="Model.AvailableBelongingPaying" />
+                        <span asp-validation-for="GoldBelongingCalculationTypeId"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Value" />
+                    </div>
+                    <div class="col-md-5" style="display: flex;align-items: center">
+                        <nop-editor asp-for="Value" asp-required="true"/>
+                        <span class="nop-editor-postfix" style="margin-right: 12px;" > @Model.PayingUnit </span>
+                        <span asp-validation-for="Value"></span>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <div class="col-md-3">
+                    </div>
+                    <div class="col-md-9">
+                        <button type="button" id="addBelongingPayingBtn" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#GoldBelongingCalculationTypeId').change(function () {
+
+            var payingType = $('#GoldBelongingCalculationTypeId').val()
+            console.log(payingType)
+            if (payingType === '2' || payingType === '3') {
+
+                $(".nop-editor-postfix").text('درصد');
+            } else {
+                $(".nop-editor-postfix").text('تومان ');
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $("#addBelongingPayingBtn").click(function () {
+            var data = {
+                productId: parseInt(@Model.ProductId),
+                value: parseFloat($("#Value").val()),
+                goldBelongingCalculationTypeId: parseInt($("#GoldBelongingCalculationTypeId").val())
+            };
+
+            var dataPrameters = addAntiForgeryToken(data);
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AddProductGcoldBelongingPaying", "GoldBelonging", new { productId = Model.ProductId })",
+                data: dataPrameters,
+                success: function (response) {
+
+                    var productId = @Model.ProductId;
+                    $.getJSON(`/GoldBelonging/GetThePayingMethodByProductId/${productId}`, function (data) {
+                        var content = `<p>${data.PayingTypeText + " : " + data.Value + " " + data.PayingUnit} </p>`
+                        console.log(data.PayingUnit);
+                        $('#dataDisplay').html(content);
+                    })
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        var productId = @Model.ProductId;
+        $.getJSON(`/GoldBelonging/GetThePayingMethodByProductId/${productId}`, function (data) {
+            
+            var content = `<p>${data.PayingTypeText + " : " + data.Value}</p>`
+            console.log(content);
+            $('#dataDisplay').html(content);
+        });
+    });
+</script>
+

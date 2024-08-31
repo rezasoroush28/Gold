@@ -1,0 +1,31 @@
+@model GoldProposalValueModel
+
+@{
+    //page title
+    ViewBag.Title = T("Plugins.Widgets.B2CGold.GoldProposalValue.Create").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Widgets.B2CGold.GoldProposalValue");
+}
+
+<form asp-controller="GoldProposalValue" asp-action="Create" enctype="multipart/form-data" method="post" id="goldProposalValue-form">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Plugins.Widgets.B2CGold.GoldProposalValue.Create")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Plugins.Widgets.B2CGold.GoldProposalValue.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync(AdminViewPathKeys.B2CGoldGoldProposalValueCreateUpdateViewPath, Model)
+</form>

@@ -1,0 +1,176 @@
+﻿@model GoldIngredientSpecificationAdminModel
+@{
+    Layout = "_AdminPopupLayout";
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Edit").Text;
+
+    const string hideB2CProductGoldIngredientIdSpecAttributeName = "B2CGold.hideB2CProductGoldIngredientIdSpec";
+    var hideB2CProductGoldIngredientIdSpec = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideB2CProductGoldIngredientIdSpecAttributeName);
+}
+
+<nop-antiforgery-token />
+<nop-panel asp-name="b2c-gold-info" asp-icon="fa fa-info"
+           asp-title=@T("Plugins.Widgets.B2CGold.GoldPriceInfo.Title")
+           asp-hide-block-attribute-name="@hideB2CProductGoldIngredientIdSpecAttributeName"
+           asp-hide="@hideB2CProductGoldIngredientIdSpec" asp-advanced="false">
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-body">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div id="Ingredient-Specification-grid"></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SpecKey" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="SpecKey" asp-required="true" />
+                                <span asp-validation-for="SpecKey"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Value" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="Value" asp-required="true" />
+                                <span asp-validation-for="Value"></span>
+                            </div>
+                        </div>
+                        <div class="form-group mt-4">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-9">
+                                <button type="button" id="addSpecificationBtn" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nop-panel>
+
+<script>
+
+    $(document).ready(function () {
+        var dataPrameters = { id : @Model.GoldIngredientId};
+        dataPrameters = addAntiForgeryToken(dataPrameters);
+
+        $("#Ingredient-Specification-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "/Admin/GoldIngredient/ListSpecificationsByIngredientId/" + @Model.GoldIngredientId,
+                        type: "POST",
+                        dataType: "json",
+                        data: dataPrameters
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { editable: false, type: "number" },
+                            SpecKey: { editable: true, type: "string" },
+                            Value: { editable: false, type: "string" },
+                        }
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            scrollable: false,
+            editable: "inline", // Enable inline editing
+            columns: [
+                {
+                    field: "SpecKey",
+                    title: "@T("Admin.Product.ProductGoldSpecification.SpecKey")",
+                    width: 90,
+                },
+                {
+                    field: "Value",
+                    title: "@T("Admin.Product.ProductGoldSpecification.Value")",
+                    width: 50,
+                },
+                {
+                    field: "delete",
+                    title: "حذف",
+                    template: kendo.template($("#delete-template-specification").html()),
+                    width: 50,
+                    filterable: false,
+                }
+            ]
+        });
+    });
+
+    $(document).ready(function () {
+        $("#addSpecificationBtn").click(function () {
+            console.log('click');
+            var data = {
+                GoldIngredientId: @Model.GoldIngredientId,
+                SpecKey: $("#SpecKey").val(),
+                Value: $("#Value").val(),
+            };
+            console.log(data);
+            var dataPrameters = addAntiForgeryToken(data);
+            $.ajax({
+                type: "POST",
+                url: `/Admin/GoldIngredient/AddIngredientSpecification/${@Model.GoldIngredientId}`,
+                data: dataPrameters,
+                success: function (response) {
+                    $("#SpecKey").val("");
+                    $("#Value").val("");
+                    window.location.reload(`/Admin/GoldIngredient/ListSpecificationsByIngredientId/${@Model.GoldIngredientId}`);
+                },
+                error: function () {
+                    console.log('error add Specification');
+                }
+            });
+        });
+    });
+
+    $("#Ingredient-Specification-grid").on("click", ".delete-template-specification", function (e) {
+        var id = parseInt($(this).attr("data-id"));
+        console.log(id)
+        var dataPrametersDelete = {
+            id: parseInt($(this).attr("data-id"))
+        };
+        dataPrametersDelete = addAntiForgeryToken(dataPrametersDelete)
+        $.ajax({
+            type: "POST",
+            url: `/Admin/GoldIngredient/DeleteProductSpecification/${id}`,
+            data: dataPrametersDelete,
+            success: function (response) {
+                window.location.reload(`/Admin/GoldIngredient/ListSpecificationsByIngredientId/${@Model.GoldIngredientId}`);
+            },
+            error: function (xhr, status, error) {
+                console.error("Failed to delete product belonging mapping: " + error);
+            }
+        });
+    });
+</script>
+
+
+<script id="delete-template-specification" type="text/x-kendo-template">
+      <button type="button" class="k-button delete-template-specification" data-id="#: id#">
+           <span class="k-icon k-delete"></span> @T("Admin.Common.Delete")
+    </button>
+</script>

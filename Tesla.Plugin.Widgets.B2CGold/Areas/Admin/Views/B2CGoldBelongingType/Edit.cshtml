@@ -1,0 +1,33 @@
+@model GoldBelongingTypeAdminModel
+
+@{
+    Html.SetActiveMenuItemSystemName("Widgets.B2CGold.GoldBelongingType");
+}
+
+<form asp-controller="GoldBelongingType" asp-action="Edit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.B2CGoldBelonging.EditB2CGoldBelonging") - @Model.Name
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ListBelongings">@T("Admin.Configuration.B2CGoldBelonging.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="B2CGoldBelonging-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @await Html.PartialAsync(AdminViewPathKeys.B2CGoldBelongingTypeCreateUpdateViewPath, Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="B2CGoldBelonging-delete" />

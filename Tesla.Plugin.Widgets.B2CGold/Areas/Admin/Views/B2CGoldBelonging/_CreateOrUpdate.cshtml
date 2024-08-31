@@ -1,0 +1,45 @@
+@model GoldBelongingAdminModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Name" />
+                        </div>
+                        <div class="col-md-5">
+                            <nop-editor asp-for="Name" asp-required="true" />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AvailableTypes" />
+                        </div>
+                        <div class="col-md-5">
+                            <nop-select asp-for="@Model.TypeId" asp-required="true" asp-items="@Model.AvailableTypes" />
+                            <span asp-validation-for="AvailableTypes"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AvailableMeasurments" />
+                        </div>
+                        <div class="col-md-5">
+                            <nop-select asp-for="@Model.MeasureWeightId" asp-required="true" asp-items="@Model.AvailableMeasurments" />
+                            <span asp-validation-for="AvailableMeasurments"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

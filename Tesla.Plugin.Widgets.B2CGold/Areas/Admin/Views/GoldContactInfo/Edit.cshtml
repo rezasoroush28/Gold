@@ -1,0 +1,35 @@
+@model GoldContactInfoModel
+@{
+    //page title
+    ViewBag.Title = T("Plugins.Widgets.B2CGold.GoldContactInfo.Edit").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Widgets.B2CGold.GoldContactInfo");
+}
+
+<form asp-controller="GoldContactInfo" asp-action="Edit" method="post" id="goldContactInfo-form">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Plugins.Widgets.B2CGold.GoldContactInfo.Edit")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Plugins.Widgets.B2CGold.GoldContactInfo.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="goldContactInfo-delete" class="btn bg-red">
+                <i class="fa fa-trash-o"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+    @await Html.PartialAsync(AdminViewPathKeys.B2CGoldContactCreateUpdateViewPath, Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="goldContactInfo-delete" />

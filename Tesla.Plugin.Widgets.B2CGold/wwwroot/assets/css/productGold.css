@@ -1,0 +1,1581 @@
+
+/* Created by Vira Pardazesh */
+.km-box-style-theme {
+    box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.1) !important;
+    background: #fff !important;
+    border-radius: 16px !important;
+    margin-bottom: 32px !important;
+}
+
+.km-box-style-theme-2 {
+    background-color: #fff !important;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid #e4e4e4 !important;
+}
+
+.km-box-style {
+    box-shadow: 0 5px 5px -5px rgba(0, 0, 0, 0.1) !important;
+    background: #fff !important;
+    border-radius: 16px !important;
+    margin-bottom: 32px !important;
+}
+
+    .km-box-style.km-overflow {
+        overflow: hidden !important;
+    }
+
+    .km-box-style.km-padding {
+        padding: 20px !important;
+    }
+
+    .km-box-style .km-title-style-theme .km-title {
+        background: #fff !important;
+    }
+
+.km-box-style2 {
+    background: #fff !important;
+    position: relative !important;
+    margin-bottom: 15px !important;
+    border-radius: 15px !important;
+    padding: 20px !important;
+}
+
+    .km-box-style2 .km-title-style-theme .km-title {
+        background: #fff !important;
+    }
+
+body {
+    overflow-x: hidden !important;
+    background: #f9f9f9 !important;
+}
+
+@media only screen and (min-width: 0px) and (max-width: 959px) {
+    .size {
+        width: 100% !important;
+    }
+}
+
+.d-inline-flex {
+    display: inline-flex !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.km-product-page-top {
+    background: #ffffff !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.pt-8 {
+    padding-top: 8px !important;
+}
+
+.pl-30 {
+    padding-left: 17px !important;
+}
+
+.pr-8 {
+    padding-right: 8px !important;
+}
+
+.pl-17 {
+    padding-left: 17px !important;
+}
+
+.px-17 {
+    padding-left: 17px !important;
+    padding-right: 17px !important;
+}
+
+.pr-12 {
+    padding-right: 12px !important;
+}
+
+.pt-24 {
+    padding-top: 24px !important;
+}
+
+.pt-0 {
+    padding-top: 0 !important;
+}
+
+.col-img-slider {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+.title-box {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #292d32 !important;
+}
+
+.controller-accordion {
+    cursor: pointer !important;
+}
+
+.controller-accordion-item {
+    cursor: pointer !important;
+}
+
+.subTitle-box {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #8f8f8f !important;
+    padding: 16px 0 !important;
+    display: block !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+.footer_second {
+    margin-top: 24px !important;
+}
+
+body {
+    padding-bottom: 0 !important;
+}
+
+#lg-counter2 {
+    background: #00000099 !important;
+    color: #e6e6e6 !important;
+    border-color: transparent !important;
+}
+
+.goToVideo-btn {
+    background: #00000099 !important;
+    color: #e6e6e6 !important;
+}
+
+    .goToVideo-btn i {
+        color: #e6e6e6 !important;
+    }
+
+.like-btn {
+    background: #00000099 !important;
+    color: #e6e6e6 !important;
+}
+
+    .like-btn i {
+        color: #e6e6e6 !important;
+    }
+
+.center-play-btn {
+    border-color: transparent !important;
+}
+
+.product-details-gold {
+    padding: 18px !important;
+    padding-bottom: 16px !important;
+    background: #fff !important;
+}
+
+    .product-details-gold .product-id {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-bottom: 24px !important;
+        margin-top: 16px !important;
+    }
+
+        .product-details-gold .product-id .id .text {
+            font-size: 12px !important;
+            color: #8f8f8f !important;
+            font-weight: 400 !important;
+        }
+
+        .product-details-gold .product-id .id .value {
+            color: #2f2f2f !important;
+            font-weight: 800 !important;
+            font-size: 15px !important;
+            font-family: "YekanBakhEnBold", serif !important;
+        }
+
+    .product-details-gold .guid-size {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+        .product-details-gold .guid-size span {
+            padding-left: 8px !important;
+            color: #8f8f8f !important;
+            font-size: 11px !important;
+        }
+
+        .product-details-gold .guid-size i {
+            font-size: 13px !important;
+        }
+
+    .product-details-gold .current-price-gold {
+        background: #f8f8f8 !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 12px 8px !important;
+        justify-content: space-between !important;
+        border-radius: 8px !important;
+    }
+
+        .product-details-gold .current-price-gold .text {
+            color: #8f8f8f !important;
+            font-weight: 500 !important;
+            font-size: 11px !important;
+        }
+
+        .product-details-gold .current-price-gold .value {
+            color: #2f2f2f !important;
+            font-size: 10px !important;
+            font-weight: 500 !important;
+        }
+
+            .product-details-gold .current-price-gold .value .price {
+                font-size: 13px !important;
+                padding-left: 2px !important;
+            }
+
+.accordion-product-gold.prepayment {
+    margin-top: 32px !important;
+}
+
+.accordion-product-gold .controller {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    border-bottom: 1px solid #f7f7f7 !important;
+    padding: 16px 0 !important;
+    padding-top: 14px !important;
+}
+
+    .accordion-product-gold .controller .icon-header {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+        .accordion-product-gold .controller .icon-header .icon {
+            width: 14px !important;
+            height: 14px !important;
+        }
+
+            .accordion-product-gold .controller .icon-header .icon img {
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+        .accordion-product-gold .controller .icon-header .header {
+            font-size: 13.5px !important;
+            font-weight: 700 !important;
+            color: #292d32 !important;
+            padding-right: 6px !important;
+            height: 14px !important;
+        }
+
+    .accordion-product-gold .controller .controller-arrow {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+        .accordion-product-gold .controller .controller-arrow i {
+            font-size: 15px !important;
+            font-weight: 200 !important;
+            color: #8f8f8f !important;
+        }
+
+        .accordion-product-gold .controller .controller-arrow.active {
+            transform: rotate(180deg) !important;
+        }
+
+.accordion-product-gold .body {
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.5s ease-out !important;
+}
+
+    .accordion-product-gold .body .item:first-child {
+        padding-top: 20px !important;
+    }
+
+    .accordion-product-gold .body .title {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #8f8f8f !important;
+        padding-top: 16px !important;
+        display: block !important;
+    }
+
+    .accordion-product-gold .body .item {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 8px 0 !important;
+    }
+
+        .accordion-product-gold .body .item .text {
+            color: #8f8f8f !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+        }
+
+        .accordion-product-gold .body .item .value {
+            display: flex !important;
+            align-items: center !important;
+        }
+
+            .accordion-product-gold .body .item .value .main-value {
+                color: #2f2f2f !important;
+                font-size: 14px !important;
+                font-weight: 600 !important;
+            }
+
+            .accordion-product-gold .body .item .value .text-value {
+                font-weight: 500 !important;
+                font-size: 9px !important;
+                color: #2f2f2f !important;
+                padding-right: 2px !important;
+            }
+
+            .accordion-product-gold .body .item .value .text-value-bold {
+                font-size: 13px !important;
+                font-weight: 600 !important;
+            }
+
+            .accordion-product-gold .body .item .value .text-value-light {
+                font-weight: 500 !important;
+                font-size: 13px !important;
+            }
+
+            .accordion-product-gold .body .item .value .main-value-light {
+                font-weight: 600 !important;
+                font-size: 13px !important;
+            }
+
+    .accordion-product-gold .body .item-dimensions {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+    }
+
+        .accordion-product-gold .body .item-dimensions ul {
+            width: 100% !important;
+        }
+
+            .accordion-product-gold .body .item-dimensions ul li {
+                position: relative !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+                padding-right: 28px !important;
+                padding-bottom: 6px !important;
+            }
+
+                .accordion-product-gold .body .item-dimensions ul li:before {
+                    position: absolute !important;
+                    content: "" !important;
+                    width: 4px !important;
+                    height: 4px !important;
+                    background: #8a8a8a !important;
+                    border-radius: 50% !important;
+                    transform: translateX(13px) !important;
+                }
+
+                .accordion-product-gold .body .item-dimensions ul li .text {
+                    font-weight: 400 !important;
+                    font-size: 11px !important;
+                }
+
+                .accordion-product-gold .body .item-dimensions ul li .value .main-value {
+                    font-size: 10px !important;
+                    font-weight: 500 !important;
+                }
+
+                .accordion-product-gold .body .item-dimensions ul li .value .text-value {
+                    font-size: 10px !important;
+                    font-weight: 500 !important;
+                }
+
+    .accordion-product-gold .body.active {
+        max-height: 1000px !important;
+    }
+
+.product-preparation {
+    margin: 8px 0 !important;
+    background: #fff !important;
+    padding: 18px !important;
+}
+
+    .product-preparation .item-preparation {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+        .product-preparation .item-preparation img {
+            width: 14px !important;
+            height: 14px !important;
+        }
+
+        .product-preparation .item-preparation .text {
+            font-weight: 500 !important;
+            font-size: 12px !important;
+            color: #2f2f2f !important;
+            padding-right: 4px !important;
+        }
+
+        .product-preparation .item-preparation .time {
+            color: #168fdf !important;
+            font-weight: 500 !important;
+            font-size: 12px !important;
+            padding-right: 3px !important;
+        }
+
+    .product-preparation .item {
+        display: flex !important;
+        align-items: flex-start !important;
+        padding-top: 11px !important;
+        flex-wrap: wrap !important;
+    }
+
+        .product-preparation .item .icon {
+            width: 15px !important;
+            height: 15px !important;
+        }
+
+            .product-preparation .item .icon img {
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+        .product-preparation .item .text {
+            width: 90% !important;
+            font-weight: 400 !important;
+            font-size: 11px !important;
+            color: #292d32 !important;
+            padding-right: 4px !important;
+        }
+
+.controller-accordion-item {
+    padding-top: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+    .controller-accordion-item .text {
+        color: #8f8f8f !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+    }
+
+    .controller-accordion-item .value {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+        .controller-accordion-item .value .main-value {
+            color: #2f2f2f !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+        }
+
+        .controller-accordion-item .value .text-value {
+            font-weight: 500 !important;
+            color: #2f2f2f !important;
+            padding: 0 4px !important;
+            padding-left: 8px !important;
+            font-size: 10px !important;
+            padding-left: 4px !important;
+        }
+
+        .controller-accordion-item .value .controller-item-arrow {
+            display: flex !important;
+            align-items: center !important;
+        }
+
+            .controller-accordion-item .value .controller-item-arrow i {
+                font-size: 15px !important;
+                font-weight: 200 !important;
+                color: #8f8f8f !important;
+            }
+
+            .controller-accordion-item .value .controller-item-arrow.active {
+                transform: rotateZ(180deg) !important;
+            }
+
+.body-accordion-item {
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.5s ease-out !important;
+}
+
+    .body-accordion-item .item .value .main-value {
+        font-size: 15px !important;
+    }
+
+    .body-accordion-item .item .value .text-value {
+        font-size: 11px !important;
+    }
+
+    .body-accordion-item .item .value .icon-value {
+        padding-right: 5px !important;
+        margin-top: 3px !important;
+    }
+
+        .body-accordion-item .item .value .icon-value i {
+            font-size: 13px !important;
+            font-weight: 500 !important;
+        }
+
+    .body-accordion-item .item .text {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+        .body-accordion-item .item .text .main-text {
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            padding-right: 4px !important;
+            padding-top: 3px !important;
+        }
+
+    .body-accordion-item.weight-gold {
+        padding-top: 6px !important;
+        margin-bottom: 16px !important;
+    }
+
+        .body-accordion-item.weight-gold .text .main-text {
+            font-size: 11px !important;
+            font-weight: 400 !important;
+        }
+
+.content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin: 8px 0 !important;
+}
+
+    .content .text {
+        color: #8f8f8f !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+    }
+
+    .content .value .main-value {
+        color: #2f2f2f !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .content .value .text-value {
+        font-weight: 500 !important;
+        font-size: 10px !important;
+        color: #2f2f2f !important;
+        padding-right: 2px !important;
+    }
+
+.line-border {
+    border-top: 1px solid #f7f7f7 !important;
+}
+
+.products-guarantees {
+    background: #ffffff !important;
+    margin: 8px 0 !important;
+    padding: 32px 18px !important;
+}
+
+    .products-guarantees .title {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding-bottom: 0 !important;
+    }
+
+        .products-guarantees .title .main-title {
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            color: #292d32 !important;
+        }
+
+    .products-guarantees .link {
+        color: #168fdf !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+        .products-guarantees .link .text {
+            font-size: 12px !important;
+            padding-left: 4px !important;
+            font-weight: 500 !important;
+        }
+
+        .products-guarantees .link .icon {
+            font-size: 16px !important;
+            padding-top: 6px !important;
+            font-weight: 500 !important;
+        }
+
+            .products-guarantees .link .icon i {
+                height: 100% !important;
+            }
+
+    .products-guarantees .item {
+        display: flex !important;
+        align-items: center !important;
+        margin: 20px 0 !important;
+    }
+
+        .products-guarantees .item .icon {
+            width: 21px !important;
+            height: 21px !important;
+            margin-left: 10px !important;
+        }
+
+            .products-guarantees .item .icon img {
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+        .products-guarantees .item .text {
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            color: #2f2f2f !important;
+        }
+
+    .products-guarantees .return-product {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 12px 15px !important;
+        background: #168fdf0f !important;
+        color: #168fdf !important;
+        border-radius: 8px !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        margin-top: 32px !important;
+        line-height: 16px !important;
+    }
+
+        .products-guarantees .return-product .icon {
+            font-size: 20px !important;
+            font-weight: 200 !important;
+        }
+
+.gold-calculation-formula {
+    padding: 20px 18px !important;
+    padding-bottom: 0 !important;
+    background: #fff !important;
+    margin-top: 8px !important;
+}
+
+    .gold-calculation-formula .title {
+        display: block !important;
+    }
+
+    .gold-calculation-formula .sub-title {
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        color: #8f8f8f !important;
+        padding: 16px 0 !important;
+        display: block !important;
+    }
+
+        .gold-calculation-formula .sub-title i {
+            font-size: 10px !important;
+            font-weight: 600 !important;
+            padding: 0 2px !important;
+        }
+
+    .gold-calculation-formula .formula .end-price {
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+    }
+
+        .gold-calculation-formula .formula .end-price .title {
+            display: flex !important;
+            align-items: flex-start !important;
+            flex-wrap: nowrap !important;
+            padding-bottom: 0 !important;
+            padding-left: 6px !important;
+            text-wrap: none !important;
+        }
+
+            .gold-calculation-formula .formula .end-price .title .text {
+                font-size: 12px !important;
+                font-weight: 600 !important;
+                padding-right: 4px !important;
+                color: #292d32 !important;
+                text-wrap: none !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                width: 100% !important;
+            }
+
+            .gold-calculation-formula .formula .end-price .title .icon {
+                width: 18px !important;
+                height: 18px !important;
+            }
+
+                .gold-calculation-formula .formula .end-price .title .icon img {
+                    width: 100% !important;
+                    height: 100% !important;
+                }
+
+    .gold-calculation-formula .formula .main-formula {
+        width: 70% !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: #8f8f8f !important;
+    }
+
+        .gold-calculation-formula .formula .main-formula .text-gold {
+            color: #ffb60f !important;
+        }
+
+        .gold-calculation-formula .formula .main-formula .text-blue {
+            color: #3083ba !important;
+        }
+
+        .gold-calculation-formula .formula .main-formula .text-purple {
+            color: #56277c !important;
+        }
+
+        .gold-calculation-formula .formula .main-formula .text-green {
+            color: #76a338 !important;
+        }
+
+        .gold-calculation-formula .formula .main-formula .text-red {
+            color: #9b1829 !important;
+        }
+
+        .gold-calculation-formula .formula .main-formula .plus {
+            color: #292d32 !important;
+            font-size: 15px !important;
+            font-weight: 700 !important;
+        }
+
+.ways-of-communication {
+    padding: 24px 18px !important;
+    background: #ffffff !important;
+}
+
+    .ways-of-communication .sub-title {
+        padding-top: 6px !important;
+        font-weight: 400 !important;
+        font-size: 11px !important;
+        color: #8f8f8f !important;
+        margin-bottom: 24px !important;
+        padding-right: 28px !important;
+    }
+
+    .ways-of-communication .item {
+        margin-bottom: 20px !important;
+    }
+
+        .ways-of-communication .item .header {
+            display: flex !important;
+            justify-content: flex-start !important;
+            align-items: flex-start !important;
+            flex-direction: column !important;
+        }
+
+            .ways-of-communication .item .header .header-icon {
+                display: flex !important;
+                align-items: center !important;
+            }
+
+                .ways-of-communication .item .header .header-icon .title {
+                    font-size: 13px !important;
+                    font-weight: 600 !important;
+                    padding-right: 4px !important;
+                    color: #8f8f8f !important;
+                }
+
+                .ways-of-communication .item .header .header-icon .icon {
+                    width: 20px !important;
+                    height: 20px !important;
+                    max-height: 20px !important;
+                    min-height: 20px !important;
+                    display: inline-flex !important;
+                }
+
+                    .ways-of-communication .item .header .header-icon .icon img {
+                        width: 100% !important;
+                        height: 100% !important;
+                    }
+
+        .ways-of-communication .item .phone-number {
+            display: flex !important;
+            align-items: center !important;
+            margin-right: auto !important;
+            margin-bottom: 16px !important;
+            font-weight: 500 !important;
+            font-size: 14px !important;
+            color: #2f2f2f !important;
+            padding-right: 28px !important;
+        }
+
+            .ways-of-communication .item .phone-number .main {
+                padding-top: 6px !important;
+            }
+
+            .ways-of-communication .item .phone-number .logo-social {
+                width: 18px !important;
+                height: 18px !important;
+                display: inline-flex !important;
+                margin-left: 8px !important;
+            }
+
+                .ways-of-communication .item .phone-number .logo-social img {
+                    width: 100% !important;
+                    height: 100% !important;
+                }
+
+    .ways-of-communication .online-chat {
+        background: #f7f7f7 !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        font-weight: 700 !important;
+        justify-content: space-between !important;
+        padding: 12px 15px !important;
+        color: #2f2f2f !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        margin-top: 32px !important;
+        line-height: 16px !important;
+    }
+
+        .ways-of-communication .online-chat .right {
+            display: flex !important;
+            align-items: center !important;
+        }
+
+            .ways-of-communication .online-chat .right .icon {
+                width: 24px !important;
+                height: 24px !important;
+                display: inline-flex !important;
+                margin-left: 6px !important;
+            }
+
+                .ways-of-communication .online-chat .right .icon img {
+                    width: 100% !important;
+                    height: 100% !important;
+                }
+
+            .ways-of-communication .online-chat .right .text {
+                padding-top: 2px !important;
+            }
+
+        .ways-of-communication .online-chat i {
+            font-weight: 200 !important;
+            font-size: 20px !important;
+        }
+
+.main-value {
+    letter-spacing: -0.8px !important;
+}
+
+.price {
+    letter-spacing: -1px !important;
+}
+
+.text {
+    word-spacing: -1.5px !important;
+}
+
+span {
+    word-spacing: -1.5px !important;
+}
+
+.text-value-weight {
+    padding-left: 1px !important;
+}
+
+.prepayment .body-accordion .item {
+    padding-left: 18px !important;
+}
+
+.end-price {
+    padding-right: 12px !important;
+    padding-left: 17px !important;
+    padding-bottom: 16px !important;
+}
+
+.body-accordion-item-show {
+    max-height: 100% !important;
+    min-height: 100% !important;
+}
+
+    .body-accordion-item-show .item:first-child {
+        padding-top: 0 !important;
+    }
+
+.body-accordion-chart .body-chart {
+    padding: 40px 32px !important;
+    padding-bottom: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+    .body-accordion-chart .body-chart .captions {
+        width: max-content !important;
+        max-width: 15% !important;
+        min-width: max-content !important;
+    }
+
+        .body-accordion-chart .body-chart .captions .item {
+            padding: 4px 0 !important;
+            display: flex !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+        }
+
+            .body-accordion-chart .body-chart .captions .item:first-child {
+                padding-top: 0 !important;
+            }
+
+            .body-accordion-chart .body-chart .captions .item .color {
+                width: 8px !important;
+                height: 8px !important;
+                margin-left: 8px !important;
+                background: #eb3a3a !important;
+                border-radius: 50% !important;
+                margin-top: 4px !important;
+            }
+
+            .body-accordion-chart .body-chart .captions .item .color-gold {
+                background: #fddb8d !important;
+            }
+
+            .body-accordion-chart .body-chart .captions .item .color-purple {
+                background: #56277c !important;
+            }
+
+            .body-accordion-chart .body-chart .captions .item .color-green {
+                background: #76a338 !important;
+            }
+
+            .body-accordion-chart .body-chart .captions .item .color-blue {
+                background: #3083ba !important;
+            }
+
+            .body-accordion-chart .body-chart .captions .item .color-red {
+                background: #9b1829 !important;
+            }
+
+            .body-accordion-chart .body-chart .captions .item .item-row {
+                display: flex !important;
+                flex-direction: column !important;
+            }
+
+                .body-accordion-chart .body-chart .captions .item .item-row .title {
+                    font-size: 12px !important;
+                    font-weight: 400 !important;
+                    color: #2f2f2f !important;
+                    padding-top: 0 !important;
+                }
+
+                .body-accordion-chart .body-chart .captions .item .item-row .price .text-price {
+                    padding-right: 2px !important;
+                }
+
+                .body-accordion-chart .body-chart .captions .item .item-row .price span {
+                    font-size: 11px !important;
+                    color: #8a8a8a !important;
+                    font-weight: 400 !important;
+                }
+
+    .body-accordion-chart .body-chart .chart {
+        width: 180px !important;
+        height: 180px !important;
+        max-width: 200px !important;
+        min-width: 200px !important;
+        max-height: 200px !important;
+        min-height: 200px !important;
+        background: transparent !important;
+        border-radius: 50% !important;
+        background-image: conic-gradient(#fddb8d 0% 65%, #9b1829 65% 71%, #76a338 71% 75%, #3083ba 75% 86%, #56277c 86% 100%) !important;
+    }
+
+@media screen and (max-width: 375px) {
+    .gold-calculation-formula .formula .main-formula {
+        font-size: 12px !important;
+        width: 64% !important;
+    }
+}
+
+.product-preparation-desk {
+    background: #f8f8f8 !important;
+    border-radius: 16px !important;
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+}
+
+    .product-preparation-desk .item-preparation img {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .product-preparation-desk .item-preparation .text {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+
+    .product-preparation-desk .item .icon {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    .product-preparation-desk .item .text {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .product-preparation-desk .product-preparation-bottom {
+        border-top: 1px solid #ffffff !important;
+        margin-top: 24px !important;
+        padding-top: 16px !important;
+    }
+
+        .product-preparation-desk .product-preparation-bottom .preorder-price {
+            color: #eb3a3a !important;
+        }
+
+            .product-preparation-desk .product-preparation-bottom .preorder-price .text {
+                font-size: 16px !important;
+                font-weight: 600 !important;
+                line-height: 24.8px !important;
+                letter-spacing: -0.5px !important;
+                text-align: right !important;
+            }
+
+            .product-preparation-desk .product-preparation-bottom .preorder-price .value {
+                font-size: 24px !important;
+                font-weight: 700 !important;
+                line-height: 37.2px !important;
+                letter-spacing: -0.5px !important;
+                text-align: left !important;
+            }
+
+            .product-preparation-desk .product-preparation-bottom .preorder-price .main-value {
+                color: #eb3a3a !important;
+                fill: #eb3a3a !important;
+            }
+
+            .product-preparation-desk .product-preparation-bottom .preorder-price .text-value {
+                font-size: 16px !important;
+                font-weight: 600 !important;
+                line-height: 24.8px !important;
+                text-align: center !important;
+            }
+
+                .product-preparation-desk .product-preparation-bottom .preorder-price .text-value .img-value {
+                    color: #eb3a3a !important;
+                    fill: #eb3a3a !important;
+                }
+
+        .product-preparation-desk .product-preparation-bottom .end-price {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        .product-preparation-desk .product-preparation-bottom .price-icon {
+            display: inline-flex !important;
+            align-items: center !important;
+        }
+
+            .product-preparation-desk .product-preparation-bottom .price-icon span {
+                height: 24px !important;
+                font-size: 16px !important;
+                font-weight: 600 !important;
+                line-height: 24.8px !important;
+                letter-spacing: -0.5px !important;
+                text-align: center !important;
+                color: #292d32 !important;
+            }
+
+            .product-preparation-desk .product-preparation-bottom .price-icon .icon {
+                width: 24px !important;
+                height: 24px !important;
+                margin-left: 8px !important;
+                align-items: center !important;
+            }
+
+                .product-preparation-desk .product-preparation-bottom .price-icon .icon img {
+                    width: 100% !important;
+                    height: 100% !important;
+                }
+
+        .product-preparation-desk .product-preparation-bottom .main-price {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: flex-end !important;
+        }
+
+            .product-preparation-desk .product-preparation-bottom .main-price .text-value {
+                max-width: 27px !important;
+                max-height: 27px !important;
+            }
+
+            .product-preparation-desk .product-preparation-bottom .main-price .value {
+                color: #2f2f2f !important;
+                font-size: 24px !important;
+                font-weight: 700 !important;
+                line-height: 37.2px !important;
+                letter-spacing: -0.5px !important;
+                text-align: center !important;
+            }
+
+            .product-preparation-desk .product-preparation-bottom .main-price .unline-value {
+                color: #c9c9c9 !important;
+                font-size: 16px !important;
+                font-weight: 600 !important;
+                line-height: 24.8px !important;
+                letter-spacing: -0.5px !important;
+                text-align: center !important;
+                position: relative !important;
+                max-width: max-content !important;
+                padding-left: 28px !important;
+            }
+
+    .product-preparation-desk .btn-gold-addtocart {
+        width: 100% !important;
+        background: #eb3a3a !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        max-height: 50px !important;
+        border-radius: 14px !important;
+        cursor: pointer !important;
+        text-align: right !important;
+        padding: 0 32px !important;
+    }
+
+        .product-preparation-desk .btn-gold-addtocart img {
+            position: relative !important;
+            padding-left: 8px !important;
+            border-left: 2px solid #ffffff4d !important;
+        }
+
+        .product-preparation-desk .btn-gold-addtocart span {
+            padding-right: 8px !important;
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            line-height: 24.8px !important;
+            letter-spacing: -0.5px !important;
+            text-align: center !important;
+            color: #ffffff !important;
+        }
+
+@media only screen and (min-width: 960px) {
+    .accordion-product-gold .controller .icon-header .icon {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .accordion-product-gold .controller .icon-header .header {
+        font-size: 16px !important;
+        height: 24px !important;
+        font-weight: 700 !important;
+    }
+
+    .accordion-product-gold .body-accordion .title {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+    }
+
+    .accordion-product-gold .body-accordion .controller-accordion-item .text {
+        font-size: 15px !important;
+        font-weight: 500 !important;
+    }
+
+    .accordion-product-gold .body-accordion .controller-accordion-item .value .main-value {
+        font-size: 16px !important;
+        font-weight: 500 !important;
+    }
+
+    .accordion-product-gold .body-accordion .controller-accordion-item .value .text-value {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .accordion-product-gold .body-accordion .body-accordion-item .item .text {
+        font-size: 15px !important;
+        font-weight: 500 !important;
+    }
+
+        .accordion-product-gold .body-accordion .body-accordion-item .item .text .main-text {
+            font-size: 15px !important;
+            font-weight: 500 !important;
+        }
+
+    .accordion-product-gold .body-accordion .body-accordion-item .value .main-value {
+        font-size: 16px !important;
+        font-weight: 500 !important;
+    }
+
+    .accordion-product-gold .body-accordion .body-accordion-item .value .text-value {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .accordion-product-gold .body-accordion .item .text {
+        font-size: 15px !important;
+        font-weight: 500 !important;
+    }
+
+    .accordion-product-gold .body-accordion .item .value .main-value {
+        font-size: 16px !important;
+        font-weight: 500 !important;
+    }
+
+    .accordion-product-gold .body-accordion .item .value .text-value {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .calc-table-desk .value .main-value {
+        font-size: 16px !important;
+    }
+
+    .calc-table-desk .value .text-value {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .calc-table-desk .controller-accordion-item .text {
+        font-size: 15px !important;
+    }
+
+    .calc-table-desk .body-accordion-item.weight-gold .item .text .main-text {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+    }
+
+    .calc-table-desk .body-accordion-item-show .item .main-text {
+        font-size: 16px !important;
+        font-weight: 500 !important;
+    }
+
+    .calc-table-desk .body-accordion-item-show .item .value .icon-value i {
+        font-size: 16px !important;
+    }
+
+    .calc-table-desk .body-accordion-item .item .text img {
+        width: 16px !important;
+        height: 18px !important;
+    }
+
+    .calc-table-desk .body-accordion-item .item .text .main-text {
+        font-size: 15px !important;
+        font-weight: 500 !important;
+    }
+
+    .calc-table-desk .body-accordion-item .item .value .main-value {
+        font-size: 16px !important;
+        font-weight: 500 !important;
+    }
+
+    .calc-table-desk .body-accordion-item .item .value .text-value {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .calc-table-desk .content .text {
+        font-size: 15px !important;
+        font-weight: 500 !important;
+    }
+
+    .calc-table-desk .content .value .main-value {
+        font-size: 16px !important;
+        font-weight: 500 !important;
+    }
+
+    .calc-table-desk .content .value .text-value {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+    }
+
+    .accordions-desktop {
+        padding-top: 8px !important;
+        background: #f9f9f9 !important;
+    }
+
+    .prepayment {
+        margin-top: 0 !important;
+    }
+
+    body {
+        background: #ffffff !important;
+    }
+
+        body.page-product .km-product-page-top .km-product-left .km-product-title .km-title-title {
+            font-family: "yekanbakh" !important;
+            color: #292d32 !important;
+            margin-top: 16px !important;
+        }
+
+        body.page-product .km-has-deals.km-product-page-top {
+            margin-bottom: 0 !important;
+        }
+
+    .vp-gallery img {
+        mix-blend-mode: multiply !important;
+        background-image: none !important;
+    }
+
+    .km-product-brand {
+        justify-content: space-between !important;
+    }
+
+        .km-product-brand .right {
+            height: 24px !important;
+        }
+
+            .km-product-brand .right a {
+                height: 24px !important;
+                display: inline-flex !important;
+            }
+
+            .km-product-brand .right .km-rate-title {
+                margin-right: 8px !important;
+                color: #2f2f2f !important;
+            }
+
+                .km-product-brand .right .km-rate-title span {
+                    margin: 0 !important;
+                    font-width: 800 !important;
+                    display: inline-flex !important;
+                    font-family: "yekanbakh", serif !important;
+                }
+
+                .km-product-brand .right .km-rate-title small.value {
+                    margin: 0 !important;
+                    font-size: 12px !important;
+                    font-width: 800 !important;
+                    display: inline-flex !important;
+                    padding-left: 0 !important;
+                }
+
+                .km-product-brand .right .km-rate-title img {
+                    width: 16px !important;
+                    height: 16px !important;
+                }
+
+        .km-product-brand .left .id .text {
+            font-size: 14px !important;
+            color: #8f8f8f !important;
+            font-weight: 400 !important;
+        }
+
+        .km-product-brand .left .id .value {
+            color: #2f2f2f !important;
+            font-weight: 800 !important;
+            font-size: 16px !important;
+            font-family: "YekanBakhEnBold", serif !important;
+        }
+
+    .current-price-gold-desk {
+        display: flex !important;
+        align-items: center !important;
+        padding: 12px 8px !important;
+        justify-content: space-between !important;
+        border-radius: 8px !important;
+        background: #60967c33 !important;
+    }
+
+        .current-price-gold-desk .text {
+            color: #8f8f8f !important;
+            font-weight: 500 !important;
+            font-size: 14px !important;
+        }
+
+        .current-price-gold-desk .value {
+            color: #2f2f2f !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+        }
+
+            .current-price-gold-desk .value .price {
+                font-size: 14px !important;
+                padding-left: 2px !important;
+            }
+
+    .body-accordion-chart .body-chart {
+        align-items: flex-start !important;
+    }
+
+        .body-accordion-chart .body-chart .chart {
+            width: 318px !important;
+            height: 318px !important;
+            max-width: 320px !important;
+            min-width: 320px !important;
+            max-height: 320px !important;
+            min-height: 320px !important;
+        }
+
+    .accordion-product-gold .body-accordion .body-accordion-item .value .main-value {
+        font-size: 14px !important;
+    }
+
+    .accordion-product-gold .body-accordion .body-accordion-item .item-dimensions ul li span.text {
+        font-weight: 400 !important;
+        font-size: 15px !important;
+    }
+
+    .accordion-product-gold .body-accordion .body-accordion-item .item-dimensions ul li .value span {
+        font-size: 14px !important;
+        font-weight: 400 !important;
+    }
+
+    .accordion-product-gold .body-accordion-chart .body-chart .captions .item .item-row .title {
+        font-size: 16px !important;
+    }
+
+    .accordion-product-gold .body-accordion-chart .body-chart .captions .item .item-row .price span {
+        font-size: 14px !important;
+    }
+
+    .products-guarantees .title .main-title {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+    }
+
+    .products-guarantees .title .link .text {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+
+    .products-guarantees .title .link .icon {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+
+    .products-guarantees .item .icon {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    .products-guarantees .text {
+        font-size: 15px !important;
+        font-weight: 400 !important;
+    }
+
+    .products-guarantees .return-product {
+        height: 56px !important;
+        cursor: pointer !important;
+    }
+
+        .products-guarantees .return-product .text {
+            font-size: 16px !important;
+            font-weight: 500 !important;
+        }
+
+        .products-guarantees .return-product .icon i {
+            font-size: 20px !important;
+        }
+
+    .ways-of-communication .title-box {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+    }
+
+    .ways-of-communication .subTitle-box {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+
+    .ways-of-communication .item .header .header-icon .icon {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .ways-of-communication .item .header .header-icon .title {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+    }
+
+    .ways-of-communication .item .header .sub-title {
+        font-size: 14px !important;
+    }
+
+    .ways-of-communication .item .phone-number {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+    }
+
+        .ways-of-communication .item .phone-number .logo-social {
+            width: 20px !important;
+            height: 20px !important;
+        }
+
+    .ways-of-communication .online-chat {
+        height: 56px !important;
+    }
+
+        .ways-of-communication .online-chat .right .icon {
+            width: 20px !important;
+            height: 20px !important;
+        }
+
+        .ways-of-communication .online-chat .right .text {
+            font-size: 16px !important;
+            font-weight: 700 !important;
+        }
+
+        .ways-of-communication .online-chat .left i {
+            font-size: 16px !important;
+        }
+
+    .gold-calculation-formula .title-box {
+        font-size: 18px !important;
+    }
+
+    .gold-calculation-formula .sub-title {
+        font-size: 16px !important;
+    }
+
+    .gold-calculation-formula .formula .end-price .title .icon {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+        .gold-calculation-formula .formula .end-price .title .icon img {
+            width: 32px !important;
+            height: 32px !important;
+        }
+
+    .gold-calculation-formula .formula .end-price .title .text {
+        height: 32px !important;
+        display: flex !important;
+        align-items: center !important;
+        font-size: 16px !important;
+    }
+
+    .gold-calculation-formula .formula .main-formula {
+        flex-wrap: wrap !important;
+        height: 32px !important;
+        max-width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        font-size: 16px !important;
+    }
+
+        .gold-calculation-formula .formula .main-formula span {
+            font-size: 15px !important;
+        }
+}
+
+@media only screen and (min-width: 0px) and (max-width: 959px) {
+    .km-product-page-top {
+        max-width: 100% !important;
+    }
+}

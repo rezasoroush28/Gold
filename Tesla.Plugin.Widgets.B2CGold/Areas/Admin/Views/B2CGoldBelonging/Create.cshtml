@@ -1,0 +1,28 @@
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.B2CGoldBelonging.AddNew").Text;
+    Html.SetActiveMenuItemSystemName("Widgets.B2CGold.GoldBelonging");
+}
+
+<form asp-controller="GoldBelonging" asp-action="Create" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.B2CGoldBelonging.AddNew")
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="ListBelongings">@T("Admin.Configuration.B2CGoldBelonging.BackToList")</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync(AdminViewPathKeys.B2CGoldBelongingCreateUpdateViewPath)
+</form>

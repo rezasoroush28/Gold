@@ -1,0 +1,54 @@
+﻿@model GoldPriceInfoModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+@{
+    Layout = null;
+    const string hideB2CInfoBlockAttributeName = "B2CGold.HideB2CInfoBlock";
+    var hideB2CInfoBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideB2CInfoBlockAttributeName);
+}
+<nop-panel asp-name="b2c-gold-price-info" asp-icon="fa fa-info"
+           asp-title="اطلاعات قیمت محصول"
+           asp-hide-block-attribute-name="@hideB2CInfoBlockAttributeName" 
+           asp-hide="@hideB2CInfoBlock" asp-advanced="false">
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ManufacturerCommissionPercentage" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="ManufacturerCommissionPercentage" asp-required="true" asp-postfix=@T("Plugins.Widgets.B2CGold.GoldPriceInfo.Percentage") />
+                                <span asp-validation-for="ManufacturerCommissionPercentage"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="VendorCommissionPercentage" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="VendorCommissionPercentage" asp-required="true" asp-postfix=@T("Plugins.Widgets.B2CGold.GoldPriceInfo.Percentage") />
+                                <span asp-validation-for="VendorCommissionPercentage"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BonakdarCommissionPercentage" />
+                            </div>
+                            <div class="col-md-5">
+                                <nop-editor asp-for="BonakdarCommissionPercentage" asp-required="true" asp-postfix=@T("Plugins.Widgets.B2CGold.GoldPriceInfo.Percentage") />
+                                <span asp-validation-for="BonakdarCommissionPercentage"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nop-panel>
